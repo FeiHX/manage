@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    /* *{
+      margin: 0;
+      padding: 0;
+    }
+    div{
+      height: 100px;
+    }
+    .container{
+      display: flex;
+    }
+    .left,.right{
+      width: 200px;
+      background: #66a4bd;
+    }
+    .middle{
+      flex: 1;
+      background: gray;
+    } */
+    *{
+      margin: 0;
+      padding: 0;
+    }
+    div{
+      height: 100px;
+    }
+    .container{
+        height: 100px;
+      padding: 0 200px;
+    }
+    .middle, .left, .right{
+      height: 100%;
+      float: left;
+    }
+    .left{
+    width: 200px;
+      background: #76d1ea;
+      position: relative;
+      /* //向左挪动父容器宽度的100% */
+      margin-left: -100%; 
+      /* //再向左挪动自身的200宽度 */
+      left: -200px;  
+    }
+
+
+    .middle{
+    width: 100%;
+      background: gray;
+
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="middle">middle</div>
+    <div class="left">left</div>
+    
+    <div class="right">right</div>
+  </div>
+</body>
+</html>

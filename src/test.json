@@ -1,0 +1,30 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "title": "1111-patch",
+      "author": "fhxfhxfhx"
+    },
+    {
+      "id": 2,
+      "title": "222",
+      "author": "fhx"
+    },
+    {
+      "title": "333",
+      "author": "ffff",
+      "id": 3
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "111-- comment",
+      "postId": 1
+    }, {
+      "id": 2,
+      "body": "222-- comment",
+      "postId": 2
+    }
+  ]
+}

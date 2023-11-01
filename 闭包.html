@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UV-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script>
+/* var a = [];
+for(var i = 0; i < 10; i++){
+  a[i] = (function(n){
+      return n;
+  })(i)
+}
+console.log(a[6]);
+console.log(i); */
+
+(function(){
+  var a = window.a = 1;
+})();
+console.log(a);
+
+/* (function(){
+  var b  = 1;
+})();
+console.log(b); */
+
+/* (function(){
+  let c  = 1;
+})();
+console.log(c); */
+
+
+// for(var i = 0; i < 10; i++){
+  
+//       console.log(i);
+//   };
+// console.log(i);
+// for(let j = 0; j < 10; j++){
+//   var d = 1;
+//   let e = 2;
+//   console.log(j);
+// };
+// console.log(d);
+//console.log(e);
+//console.log(j);
+
+/* function func(arg) {
+  {
+    let arg;
+  }
+}
+func() // 不报错 */
+/* if(true){
+    function f(){
+        console.log(1);
+    }
+}
+f(); */
+/* console.log(typeof a)
+let a = 1; */
+//====================================
+/* var outerValue = 'nja';
+var later;
+function outerFunction(){
+  var innerValue = 'sam';
+  function innerFunction(paramValue){
+    if(outerValue){console.log("can see nja")};
+    if(innerValue){console.log("can see sam")};
+    if(paramValue){console.log("can see waki")};
+    if(tooLate){console.log("Inner can see ronin")};
+  }
+  later = innerFunction;
+}
+if(!tooLate){console.log("Outer cant see ronin")};
+var tooLate = 'ronin';
+outerFunction();
+later('waki'); */
+//======================================
+/* function Nja(){
+  var feints = 0;
+  this.getFeints = function(){
+    return feints;
+  };
+  this.feint = function(){
+    ++feints;
+  };
+}
+var nja = new Nja();
+nja.feint();
+if(nja.getFeints() == 1){
+  console.log('we can access feint')
+}
+if(nja.feints == undefined){
+  console.log('the private value cant');
+} */
+
+//=============================================================
+/* Function.prototype.curry = function(){
+  var fn = this,args = Array.prototype.slice.call(arguments);
+  return function(){
+    return fn.apply(fn,args.concat(Array.prototype.slice.call(arguments)));
+  };
+};
+function func(a,b,c){
+  console.log(a + b + c);
+}
+var func1 = func.curry(1);
+func1(2,3); */
+//==========================
+/* function partial(func,...argsBound) {
+  return function(...args) {
+    return func.call(this,...argsBound,...args);
+  }
+}
+function fun(a,b,c){
+  console.log(a + b + c);
+}
+var func2 = partial(fun,1,2);
+func2(3); */
+//========================有点问题！！！
+/* Function.prototype.partial_ = function(){
+  var fn = this, args = Array.prototype.slice.call(arguments);
+  return function(){
+    var arg = 0;
+    for(var i = 0; i < args.length && arg < arguments.length; i++) {
+      if(args[i] == undefined) {
+        args[i] = arguments[arg++];
+      }
+    }
+    return fn.apply(this,args);
+  }
+}
+function fun(a,b,c){
+  console.log(a + b + c);
+}
+var func1 = fun.partial_(1,2,3);
+//func1(3) */
+
+//闭包实现函数缓存记忆功能=================
+/* Function.prototype.memoized = function(key) {
+  this._values = this._values || {};//确保存在一个储存缓存的对象
+  return this._values[key] !== undefined ? 
+  this._values[key] :              //当缓存对象中key对应的缓存存在时，直接返回
+  this._values[key] = this.apply(this,arguments);//当缓存对象中key对应的缓存不存在时
+                                                 //将返回值保存在缓存中
+};
+Function.prototype.memoize = function(){
+  var fn = this;
+  return function(){
+    return fn.memoized.apply(fn,arguments);
+  };
+};
+
+var isPrime = (function (num) {
+  var prime = num != 1;
+  for (var i = 2; i < num; i++) {
+    if (num % i == 0)  {
+      prime = false;
+      break;
+    }
+  }
+  return prime;
+}).memoize();
+if(isPrime(5)){
+  console.log('5 is prime');
+}
+ */
+ //============================函数包装
+ /* function wrap(object,method,wrapper) {
+   var fn = object[method];
+   return object[method] = function( ) {
+      return warpper.apply(this,[fn.bind(this)].concat(Array.prototype.slice.call(arguments)));
+ };
+} */
+
+    </script>
+   
+</head>
+
+<body>
+
+</body>
+</html>

@@ -1,0 +1,20 @@
+const express = require('express');
+const router = express.Router();
+const sqlFn = require("../mysql")
+
+router.get('/',(req,res)=>{
+       
+   const sql = "select * from categories  "
+   const arr = [req.query]
+   sqlFn(sql,arr,function(data) {
+       console.log(data);
+       res.send(data)
+   })  
+
+
+
+          
+   
+
+})
+module.exports = router;

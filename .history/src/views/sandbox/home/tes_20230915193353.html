@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+</head>
+<body>
+     <input id="container">
+     <script>
+        let container = document.getElementById('container');
+        console.log(container);
+        const debounce = (func,delay) => {
+            let timeout;
+            return () => {
+            // console.log(clearTimeout(timeout));
+            // console.log(timeout);
+            timeout = setTimeout(()=>{
+                func.call(this);
+                // console.log('dingshiqi');
+                // console.log(timeout);
+            },delay)
+    }
+  }
+  container.oninput = debounce(()=>{
+    console.log(this.value);
+  },3000)
+     </script>
+
+</body>
+</html>

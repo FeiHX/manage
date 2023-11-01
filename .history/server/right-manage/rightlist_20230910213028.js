@@ -1,0 +1,13 @@
+"/home",
+"/news-manage/list",
+"/news-manage/add",
+"/news-manage/update/:id",
+"/news-manage/preview/:id",
+"/news-manage/draft",
+"/audit-manage",
+"/audit-manage/list",
+"/publish-manage",
+"/publish-manage/unpublished",
+"/publish-manage/published",
+"/publish-manage/sunset",
+"/news-manage"
