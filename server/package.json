@@ -69,7 +69,8 @@
     "ws": "^8.14.2"
   },
   "scripts": {
-    "start": "nodemon ./index.js"
+    "start": "nodemon ./index.js",
+     "build": "cross-env NODE_ENV=production webpack --config ./webpack.config.js"
   },
   "author": "",
   "license": "ISC",
