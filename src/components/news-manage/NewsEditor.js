@@ -4,6 +4,7 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { EditorState, convertToRaw ,ContentState} from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs'
+import axios from 'axios'
 export default function NewsEditor(props) {
     const [editorState,setEditorState] = useState('')
     useEffect(()=>{
@@ -16,6 +17,24 @@ export default function NewsEditor(props) {
             setEditorState(editorState)
         }
     },[props.content])
+    const uploadImageCallBack=async function(files){
+        return new Promise(
+          async(resolve, reject) => {
+            let _formData = new FormData();
+            _formData.append('file',files);
+            _formData.append('filename',files.name);
+            axios({method:'post',url:'/api/files',headers: {'Content-Type': 'multipart/form-data'},data:_formData})
+                .then(res => {
+                    if (1) {
+                            console.log(res.data)
+                            resolve({ data: { link: res.data.fileLink } })
+                        } else {
+    
+                        }
+                })
+          }
+        )
+      }
     return (
         <div>
             <Editor
@@ -27,6 +46,17 @@ export default function NewsEditor(props) {
                 onBlur={()=>{
                     props.getContent(draftToHtml(convertToRaw(editorState.getCurrentContent())))
                 }}
+                toolbar={{
+                    image: {
+                        urlEnabled: true,
+                        uploadEnabled: true,
+                        alignmentEnabled: true,   // 是否显示排列按钮 相当于text-align
+                        uploadCallback: uploadImageCallBack,
+                        previewImage: true,
+                        inputAccept: 'image/gif,image/jpeg,image/jpg,image/png',
+                        alt: {present: false, mandatory: false,previewImage: true}
+                    },
+                  }}
             />;
         </div>
   )
