@@ -5,6 +5,7 @@ import { EditorState, convertToRaw ,ContentState} from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs'
 import axios from 'axios'
+import Axios from '../../utils/myAxios'
 export default function NewsEditor(props) {
     const [editorState,setEditorState] = useState('')
     useEffect(()=>{
@@ -23,7 +24,7 @@ export default function NewsEditor(props) {
             let _formData = new FormData();
             _formData.append('file',files);
             _formData.append('filename',files.name);
-            axios({method:'post',url:'/api/files',headers: {'Content-Type': 'multipart/form-data'},data:_formData})
+            Axios({method:'post',url:'/api/files',headers: {'Content-Type': 'multipart/form-data'},data:_formData})
                 .then(res => {
                     if (1) {
                             console.log(res.data)

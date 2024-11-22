@@ -12,7 +12,7 @@ const rightlistchildren = require('./routes/rightlistchildrenRouter.js')
 const news = require('./routes/newsRouter.js')
 const categories = require('./routes/categoriesRouter.js')
 const authtoken = require('./routes/authTokenRouter.js')
-const files = require('./routes/file.js')
+const files = require('./routes/files.js')
 
 app.use(express.static("./public/upload"))
 

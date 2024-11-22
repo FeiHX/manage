@@ -3,6 +3,7 @@ const router = express.Router();
 const sqlFn = require("../mysql")
 const multiparty = require('multiparty')
 const path = require('path')
+
 const uploadDir=`${__dirname}/upload`
 const parentDir = path.join (__dirname, '/..'); 
 const parentDir1 = path.join(parentDir,'public/upload/')
