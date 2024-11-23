@@ -4,6 +4,7 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { EditorState, convertToRaw ,ContentState} from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs'
+import { message } from 'antd';
 import axios from 'axios'
 import Axios from '../../utils/myAxios'
 export default function NewsEditor(props) {
@@ -22,19 +23,19 @@ export default function NewsEditor(props) {
         return new Promise(
           async(resolve, reject) => {
             if(!['image/jpeg','image/jpg','image/gif',"image/png"].includes(files.type)) {
-                console.log(files.type)
                 reject({err:'文件类型不符'})
+                message.error('文件类型不为图片') 
+                return
             }
             let _formData = new FormData();
             _formData.append('file',files);
             _formData.append('filename',files.name);
             Axios({method:'post',url:'/api/files',headers: {'Content-Type': 'multipart/form-data'},data:_formData})
                 .then(res => {
-                    if (1) {
-                            console.log(res.data)
+                    if (res.data.code==0) {
                             resolve({ data: { link: res.data.fileLink } })
                         } else {
-    
+                            reject(new Error(res.data.codeText)) 
                         }
                 })
           }
