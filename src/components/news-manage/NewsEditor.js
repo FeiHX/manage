@@ -21,7 +21,7 @@ export default function NewsEditor(props) {
     const uploadImageCallBack=async function(files){
         return new Promise(
           async(resolve, reject) => {
-            console.log(file)
+            console.log(files)
             let _formData = new FormData();
             _formData.append('file',files);
             _formData.append('filename',files.name);
