@@ -26,5 +26,5 @@ app.use(categories)
 app.use(authtoken)
 app.use(files)
 app.listen(3030,(req,res) => {
-    debug('服务器运行在3030端口上!!!');
+    debug('服务器运行在3030端口上');
 })
