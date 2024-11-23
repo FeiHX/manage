@@ -33,7 +33,7 @@ const multiparty_upload = function multiparty_upload(req, auto) {
                 code: 0,
                 codeText:'upload success',
                 originalFilename:file.originalFilename,
-                fileLink: 'http://8.138.4.242/:3030/'+file.path.split('upload\\')[1]
+                fileLink: 'api/'+file.path.split('/upload/')[1]
 
             })
 })
