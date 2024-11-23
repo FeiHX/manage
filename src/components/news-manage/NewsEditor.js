@@ -21,7 +21,10 @@ export default function NewsEditor(props) {
     const uploadImageCallBack=async function(files){
         return new Promise(
           async(resolve, reject) => {
-            console.log(files)
+            if(!['image/jpeg','image/jpg','image/gif',"image/png"].includes(files.type)) {
+                console.log(files.type)
+                reject({err:'文件类型不符'})
+            }
             let _formData = new FormData();
             _formData.append('file',files);
             _formData.append('filename',files.name);
