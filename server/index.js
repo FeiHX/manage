@@ -16,7 +16,7 @@ const files = require('./routes/files.js')
 
 app.use(express.static("./public/upload"))
 
-app.use(bodyParser.json({ limit: '50mb' }))
+app.use(bodyParser.json())
 app.use(users);
 app.use(rolelist)
 app.use(rightlist)
