@@ -61,7 +61,7 @@ export default function NewsEditor(props) {
                                         reject(new Error(res.data.codeText)) 
                                     }
                             })
-                    },'image/jpeg',0.8)
+                    },'image/jpeg',0.4)
                     // let newUrl = pressCanvas.toDataURL('image/jpeg',0.92)
                     // resolve({ data: { link: newUrl } }) 
                 })
