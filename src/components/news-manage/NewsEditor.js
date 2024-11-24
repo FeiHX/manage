@@ -19,28 +19,56 @@ export default function NewsEditor(props) {
             setEditorState(editorState)
         }
     },[props.content])
-    const uploadImageCallBack=async function(files){
-        return new Promise(
-          async(resolve, reject) => {
-            if(!['image/jpeg','image/jpg','image/gif',"image/png"].includes(files.type)) {
+    const uploadImageCallBack=async function(files) {
+        return new Promise(async(resolve, reject) => {
+            if(!['image/jpeg','image/jpg',"image/png"].includes(files.type)) {
                 reject({err:'文件类型不符'})
-                message.error('文件类型不为图片') 
+                message.error('文件类型不符') 
                 return
             }
-            let _formData = new FormData();
-            _formData.append('file',files);
-            _formData.append('filename',files.name);
-            Axios({method:'post',url:'/api/files',headers: {'Content-Type': 'multipart/form-data'},data:_formData})
-                .then(res => {
-                    if (res.data.code==0) {
-                            resolve({ data: { link: res.data.fileLink } })
-                        } else {
-                            reject(new Error(res.data.codeText)) 
-                        }
+            // let _formData = new FormData();
+            // _formData.append('file',files);
+            // _formData.append('filename',files.name);
+            // Axios({method:'post',url:'/api/files',headers: {'Content-Type': 'multipart/form-data'},data:_formData})
+            //     .then(res => {
+            //         if (res.data.code==0) {
+            //                 resolve({ data: { link: res.data.fileLink } })
+            //             } else {
+            //                 reject(new Error(res.data.codeText)) 
+            //             }
+            //     })
+            const fr = new FileReader()
+            fr.readAsDataURL(files)
+            fr.onload = function(event) {
+                const {result:src} = event.target
+                const image = new Image()
+                image.src = src
+                setTimeout(()=> {
+                    let pressCanvas = document.createElement('canvas')
+                    pressCanvas.width = image.width
+                    pressCanvas.height = image.height
+                    let ctx = pressCanvas.getContext('2d')
+                    ctx.drawImage(image,0,0,image.width,image.height)
+                    pressCanvas.toBlob((blob)=>{
+                        let _formData = new FormData();
+                        _formData.append('file',blob);
+                        // _formData.append('filename',files.name);
+                        Axios({method:'post',url:'/api/files',headers: {'Content-Type': 'multipart/form-data'},data:_formData})
+                            .then(res => {
+                                if(res.data.code==0) {
+                                        resolve({ data: { link: res.data.fileLink } })
+                                    }else {
+                                        reject(new Error(res.data.codeText)) 
+                                    }
+                            })
+                    },'image/jpeg',0.8)
+                    // let newUrl = pressCanvas.toDataURL('image/jpeg',0.92)
+                    // resolve({ data: { link: newUrl } }) 
                 })
-          }
-        )
-      }
+                 
+            }
+        })
+    }
     return (
         <div>
             <Editor
