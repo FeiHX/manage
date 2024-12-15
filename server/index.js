@@ -2,7 +2,6 @@ const express = require('express');
 const app = express();
 const debug = require('debug')('my-application')
 const bodyParser = require('body-parser')
-const WebSocket = require('ws');
 const path = require('path')
 const authMiddleware = require('./middlewares/auth.js')
 const users = require('./routes/userRouter.js')
@@ -13,6 +12,10 @@ const news = require('./routes/newsRouter.js')
 const categories = require('./routes/categoriesRouter.js')
 const authtoken = require('./routes/authTokenRouter.js')
 const files = require('./routes/files.js')
+
+
+
+// const expressWs = require('express-ws')(app)
 
 app.use(express.static("./public/upload"))
 
@@ -25,6 +28,10 @@ app.use(news)
 app.use(categories)
 app.use(authtoken)
 app.use(files)
+
+
+app.use()
+
 app.listen(3030,(req,res) => {
     debug('服务器运行在3030端口上!!!!');
 })

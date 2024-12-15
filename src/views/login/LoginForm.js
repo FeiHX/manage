@@ -40,7 +40,16 @@ function LoginForm(props) {
         props.getUserList && props.getUserList();
         props.getCategories();
         props.getrolelist && props.getrolelist();
-        props.getrightlist()
+        props.getrightlist();
+        const ws = new WebSocket(`ws://localhost:3030/notice?type=list`);
+        ws.onmessage = function(msg) {
+            let list = JSON.parse(msg.data).map(item=>{
+                item.message = JSON.parse(item.message)
+                return item
+            })
+            list.reverse()
+            props.changeNoticeList(list,ws)
+        }      
     }
     return (
         <div style={{background:'rgb(35,39,65)',height:'100%',overflow:'hidden'}}>

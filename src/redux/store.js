@@ -10,6 +10,7 @@ import {CurrentUserReducer} from './reducers/CurrentUserReducer.js'
 import { CategoriesReducer } from './reducers/CategoriesReducer.js';
 import {RoleListReducer} from './reducers/RoleListReducer.js';
 import { RightListReducer } from './reducers/RightListReducer.js';
+import { NoticeListReducer } from './reducers/NoticeListReducer.js';
 
 const rootReducer = combineReducers({
     CollApsedReducer,
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
     CategoriesReducer,
     RoleListReducer,
     RightListReducer,
+    NoticeListReducer,
 })
 const persistConfig = {
     key: 'root',

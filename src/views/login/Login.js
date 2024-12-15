@@ -8,8 +8,10 @@ import jwtDecode from 'jwt-decode'
 
 function Login(props) {
     return (
-      <LoginForm loginActions={props.loginActions}  getCategories={props.getCategories} 
-      getrolelist={props.getrolelist} getrightlist={props.getrightlist} description={props.description}></LoginForm>
+        <LoginForm loginActions={props.loginActions}  getCategories={props.getCategories} 
+            getrolelist={props.getrolelist} getrightlist={props.getrightlist} description={props.description}
+            changeNoticeList={props.changeNoticeList}
+        ></LoginForm>
     )
 };
 const mapDispatchToprops = {
@@ -73,7 +75,16 @@ const mapDispatchToprops = {
               })
             })
         }
-    }   
+    },
+    changeNoticeList (noticelist,ws) {
+        return (dispatch) => {
+            ws.close(1000, '客户端主动断开');  
+            dispatch({
+                type:'change_noticelist',
+                payload:noticelist
+            })
+        }
+    }, 
 }
  
 export default withRoute(connect(null, mapDispatchToprops)(Login))

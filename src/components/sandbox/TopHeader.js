@@ -1,9 +1,10 @@
-import React from 'react'
-import { Layout ,Dropdown,Button} from 'antd';
+import React, { useEffect, useState } from 'react'
+import { Layout ,Dropdown, Button,Badge,Drawer,List,Form} from 'antd';
 import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
     UserOutlined,
+    MessageOutlined
 } from '@ant-design/icons';
 import { Avatar } from 'antd';
 import withRoute from './withRoute';
@@ -13,6 +14,15 @@ import {data} from '../../utils/data.js'
 const { Header } = Layout;
 
 function TopHeader(props) {
+    useEffect(()=>{
+        const ws = new WebSocket(`ws://localhost:3030/notice?send=${props.username}`);
+        ws.onmessage = function(msg) {
+            let tempNoticeList = JSON.parse(JSON.stringify(props.noticelist))
+            tempNoticeList.unshift({message:JSON.parse(JSON.parse(msg.data))})
+            props.changeNoticeList(tempNoticeList)
+        }
+      },[props.noticelist])
+    const [visible,setVisible] = useState(false)
     const changeCollapsed = () => {
         props.changeCollapsed();
     }
@@ -76,26 +86,60 @@ function TopHeader(props) {
             }) 
         }
     return (
-        <Header style={{ padding: '0,16px', backgroundColor:'white',height:'70px' }}>
-            {
-                props.isCollapsed ? <MenuUnfoldOutlined onClick={changeCollapsed}></MenuUnfoldOutlined> : <MenuFoldOutlined onClick={changeCollapsed}></MenuFoldOutlined>
-            }  
-            <div style={{float:'right'}}>
-                <span><Button onClick={restoreData}>数据库初始化</Button> </span>
-                <span >欢迎<span style={{color:'#1890ff'}}>{props.username}</span>回来</span>
-                <Dropdown menu={{items}}>
-                    <Avatar size="large" icon={<UserOutlined/>}/>
-                </Dropdown>  
-            </div>
-        </Header>
+        <div>
+            <Header style={{ padding: '0,16px', backgroundColor:'white',height:'70px' }}>
+                {
+                    props.isCollapsed ? <MenuUnfoldOutlined onClick={changeCollapsed}></MenuUnfoldOutlined> : <MenuFoldOutlined onClick={changeCollapsed}></MenuFoldOutlined>
+                }  
+                <div style={{float:'right'}}>
+                    <span style={{marginRight: "50px"}}><Button onClick={restoreData}>数据库初始化</Button> </span>
+                    <span onClick={()=>setVisible(true)} style={{margin: "20px"}}>
+                        <Button>
+                            <Badge count={props.noticelist.length}><MessageOutlined style={{width:"30px",height:"30px"}} /></Badge>
+                        </Button>
+                    </span>
+                    <span> 欢 迎 <span style={{color:'#1890ff'}}>{props.username}</span> 回 来 </span>
+                    <Dropdown menu={{items}}>
+                        <Avatar size="large" icon={<UserOutlined/>}/>
+                    </Dropdown>  
+                </div>
+            </Header>
+            <Drawer
+                title="通知"
+                placement="left"
+                onClose={()=>setVisible(false)}
+                open={visible}
+                style={{ position: 'absolute' }}
+            >
+                <List
+                    itemLayout="horizontal"
+                    dataSource={props.noticelist}
+                    renderItem={(item, index) => (
+                    <List.Item>
+                            <List.Item.Meta
+                            title={<span>{item.message.type}---{joe.dateFormat(item.message.time)}</span>}
+                            description={item.message.content}
+                            />
+                    </List.Item>
+                    )}
+                />
+            </Drawer>
+        </div>
+
      )
 }
-const mapStateToProps = ({CollApsedReducer:{isCollapsed},CurrentUserReducer:{username,role}}) => {
+const mapStateToProps = ({CollApsedReducer:{isCollapsed},CurrentUserReducer:{username,role},NoticeListReducer:{noticelist}}) => {
     return {
-        isCollapsed,username,role
+        isCollapsed,username,role,noticelist
     }
 }
 const mapDispatchToProps = {
+    changeNoticeList(noticelist) {
+        return {
+          type:'change_noticelist',
+          payload:noticelist
+        }
+      },
     changeCollapsed() {
         return {
             type:"change_collapsed",
