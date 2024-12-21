@@ -8,8 +8,8 @@ function Unpublish(props) {
     const {dataSource, handlePublish} = usePublish(1, props.username)
     return (
         <div>
-            <NewsPublish dataSource={dataSource} button={(id) => 
-                <Button type='primary' onClick={() => {handlePublish(id)}}>发布</Button>} >
+            <NewsPublish dataSource={dataSource} button={(item) => 
+                <Button type='primary' onClick={() => {handlePublish(item)}}>发布</Button>} >
             </NewsPublish>
         </div>
     )

@@ -62,6 +62,17 @@ function Audit(props) {
         setdataSource(dataSource.filter(data => data.id !== item.id))
         Axios.patch(`/api/news/audit?id=${item.id}`,{auditState, publishState})
             .then(res => {
+                if(auditState==2&&publishState==1) {
+                    const ws = new WebSocket(`wss://my-manage.cn/websocket/notice?type=pass&&user=${props.username}`);
+                    ws.onopen = function() {
+                        ws.send(JSON.stringify({type:'pass',time:Date.now(),send:props.username,recieve: item.author,content:`审核通过:用户${item.author}提交的新闻《${item.title}》审核通过`}))
+                    }
+                }else if(auditState==3&&publishState==0) {
+                    const ws = new WebSocket(`wss://my-manage.cn/websocket/notice?type=reject&&user=${props.username}`);
+                    ws.onopen = function() {
+                        ws.send(JSON.stringify({type:'reject',time:Date.now(),send:props.username,recieve:item.author,content:`审核未通过:用户${item.author}提交的新闻《${item.title}》被驳回`}))
+                    }
+                }
                 notification.info({ 
                     message: '通知',
                     description: `您可以到【审核管理/审核列表】中查看您的新闻的审核状态`,

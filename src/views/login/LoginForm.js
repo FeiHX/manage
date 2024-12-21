@@ -41,7 +41,7 @@ function LoginForm(props) {
         props.getCategories();
         props.getrolelist && props.getrolelist();
         props.getrightlist();
-        const ws = new WebSocket(`ws://localhost:3030/notice?type=list`);
+        const ws = new WebSocket(`wss://my-manage.cn/websocket/notice?type=list`);
         ws.onmessage = function(msg) {
             let list = JSON.parse(msg.data).map(item=>{
                 item.message = JSON.parse(item.message)

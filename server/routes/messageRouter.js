@@ -13,7 +13,7 @@ const private = (send,recieve) => {
     }
 }
 
-router.ws('/notice',function(ws,req) {
+router.ws('/websocket/notice',function(ws,req) {
     const {type,send} = req.query;
     wsMap2.set(send,ws)
     switch (type) {
@@ -26,6 +26,7 @@ router.ws('/notice',function(ws,req) {
             ws.on('message', function (msg) {
                 let sql = "insert into notices (`message`) values (?)"
                 let arr = [msg]
+
                 sqlFn(sql,arr,function(data) { })
                 const sql1 = "select * from notices"
                 sqlFn(sql1,[],function(data) {
@@ -35,16 +36,19 @@ router.ws('/notice',function(ws,req) {
                 })
             })
             break;
-        case 'list':        
+        case 'list':     
             const sql1 = "select * from notices"
             sqlFn(sql1,[],function(data) {
                 ws.send(JSON.stringify(JSON.parse(JSON.stringify(data))))
             })
             break;
         default:
+            ws.on('message',function() {
+                ws.send('heartbeat-response')
+            })
     }
 })
-router.ws('/chat',function(ws,req) {
+router.ws('/websocket/chat',function(ws,req) {
     const {type,send,recieve} = req.query;
     const sqlCheck = "select * from userlist where `user`= ? "
     const arrCheck = [send]
@@ -63,8 +67,7 @@ router.ws('/chat',function(ws,req) {
                 const sqlCheckMsg = "select * from privatemessage where `privateName`=?"
                 const arrCheckMsg = [privateName]
                 sqlFn(sqlCheckMsg,arrCheckMsg,function(data) {
-                    if(!data.length) {
-                        console.log(JSON.parse(JSON.stringify(data)),'!')                     
+                    if(!data.length) {                    
                         const sqlIncertMsg = "insert into privatemessage (`privateName`,`message`) values (?,?)"
                         const arrIncertMsg = [privateName,msg]
                         sqlFn(sqlIncertMsg,arrIncertMsg,function(data) {})
@@ -84,7 +87,6 @@ router.ws('/chat',function(ws,req) {
         case 'userlist':
             const sqlGetUser = "select * from userlist  "
             sqlFn(sqlGetUser,[],function(data) { 
-                console.log((JSON.stringify(data)))
                 ws.send(JSON.stringify(data))
             })
         break;
@@ -102,3 +104,5 @@ router.ws('/chat',function(ws,req) {
 })
 
 module.exports = router;
+
+

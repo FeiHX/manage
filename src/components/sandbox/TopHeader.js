@@ -11,17 +11,81 @@ import withRoute from './withRoute';
 import {connect} from 'react-redux'
 import Axios from '../../utils/myAxios.js'
 import {data} from '../../utils/data.js'
+import joe from 'joe-tools'
 const { Header } = Layout;
 
 function TopHeader(props) {
-    useEffect(()=>{
-        const ws = new WebSocket(`ws://localhost:3030/notice?send=${props.username}`);
-        ws.onmessage = function(msg) {
-            let tempNoticeList = JSON.parse(JSON.stringify(props.noticelist))
-            tempNoticeList.unshift({message:JSON.parse(JSON.parse(msg.data))})
-            props.changeNoticeList(tempNoticeList)
+    let  heartbeatTimer = null;
+    let lastHeartbeatTime = 0;
+    let heartbeatTimeout = null;
+    const heartbeatInterval = 5000; // 5秒发送一次心跳消息
+    const timeoutThreshold = 10000;  // 10秒内未收到响应则认为连接已断开
+    // 发送心跳消息
+    function sendHeartbeat(ws) {
+        if (ws.readyState === WebSocket.OPEN) {
+            ws.send('heartbeat');
+            lastHeartbeatTime = Date.now();
         }
-      },[props.noticelist])
+    }
+    // 启动心跳检测
+    function startHeartbeat(ws) {
+        heartbeatTimer = setInterval(() => {
+            sendHeartbeat(ws);
+        }, heartbeatInterval);
+        // 设置一个超时检测，用于在指定时间内未收到心跳响应时处理连接断开
+        const heartbeatTimeout = setTimeout(() => {
+            const currentTime = Date.now();
+            if (currentTime - lastHeartbeatTime > timeoutThreshold) {
+                console.log('Heartbeat timeout, closing connection');
+                ws.close();
+            }
+        }, timeoutThreshold + heartbeatInterval); // 加上 heartbeatInterval 以确保在下一轮心跳前检测
+    }
+    // 重置心跳定时器
+    function resetHeartbeatTimer(ws) {
+        clearTimeout(heartbeatTimeout); // 需要维护 heartbeatTimeout 变量
+        heartbeatTimeout = setTimeout(() => {
+            const currentTime = Date.now();
+            if (currentTime - lastHeartbeatTime > timeoutThreshold) {
+                console.log('Heartbeat timeout after reset, closing connection');
+                ws.close();
+            }
+        }, timeoutThreshold);
+    }
+    // 停止心跳检测
+    function stopHeartbeat() {
+        clearInterval(heartbeatTimer);
+        clearTimeout(heartbeatTimeout);
+    }
+    useEffect(()=>{
+        // 创建 WebSocket 连接
+        const ws = new WebSocket(`wss://my-manage.cn/websocket/notice?send=${props.username}`);
+        // 处理连接打开事件
+        ws.onopen = () => {
+            console.log('WebSocket connection opened');
+            startHeartbeat(ws);
+        };
+        // 处理连接错误事件
+        ws.onerror = (error) => {
+            console.log('WebSocket error:', error);
+            stopHeartbeat();
+        };        
+        ws.onmessage = function(msg) {
+            if(msg.data === 'heartbeat-response') {
+                resetHeartbeatTimer(ws);
+            }else {
+                let tempNoticeList = JSON.parse(JSON.stringify(props.noticelist))
+                tempNoticeList.unshift({message:JSON.parse(JSON.parse(msg.data))})
+                props.changeNoticeList(tempNoticeList)    
+            }
+        }
+        // 处理连接关闭事件
+        ws.onclose = function (e) {
+            stopHeartbeat();
+            console.log('websocket 断开: ' + e.code + ' ' + e.reason + ' ' + e.wasClean)
+            console.log(e)
+        }
+    },[props.noticelist])
     const [visible,setVisible] = useState(false)
     const changeCollapsed = () => {
         props.changeCollapsed();

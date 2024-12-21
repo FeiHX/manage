@@ -8,8 +8,8 @@ function Publish(props) {
     const {dataSource, handleSunset} = usePublish(2, props.username)
     return (
         <div>
-            <NewsPublish dataSource={dataSource} button={(id) => 
-                <Button danger onClick={() => {handleSunset(id)}}>下线</Button>}>
+            <NewsPublish dataSource={dataSource} button={(item) => 
+                <Button danger onClick={() => {handleSunset(item)}}>下线</Button>}>
             </NewsPublish>
         </div>
     )

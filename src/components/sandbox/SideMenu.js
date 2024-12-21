@@ -20,7 +20,7 @@ function SideMenu(props) {
     const renderMenu = (menuList) => {
         return menuList.map(menuListItem => {
             if(checkPagePermission(menuListItem)) {
-                if(menuListItem.grade == 1 && menuListItem.rightKey !== '/home') {
+                if(menuListItem.grade == 1 && menuListItem.rightKey !== '/home' && menuListItem.rightKey !== '/chat') {
                     return menuListItem.children?.length > 0 
                         &&  <SubMenu key={menuListItem.rightKey}  title={menuListItem.title}>
                                 {renderMenu(menuListItem.children)}

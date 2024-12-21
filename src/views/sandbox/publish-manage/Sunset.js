@@ -9,8 +9,8 @@ function Sunset(props) {
     const {dataSource, handleDelete} = usePublish(3, props.username)
     return (
         <div>
-            <NewsPublish dataSource={dataSource} button={(id) =>
-                <Button danger onClick={()=>{handleDelete(id)}}>删除</Button>}>
+            <NewsPublish dataSource={dataSource} button={(item) =>
+                <Button danger onClick={()=>{handleDelete(item)}}>删除</Button>}>
             </NewsPublish>
         </div>
     )

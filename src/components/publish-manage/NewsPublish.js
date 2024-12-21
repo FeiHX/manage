@@ -29,7 +29,7 @@ function NewsPublish(props) {
         },
         {
             title: '操作',
-            render: (item) => props.button(item.id)
+            render: (item) => props.button(item)
         },
     ];
     return (

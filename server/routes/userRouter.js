@@ -11,21 +11,21 @@ const WebSocket = require('ws');
 const authMiddleware = require('../middlewares/auth')
 router.use(authMiddleware)
 
-const server = new WebSocket.Server({ port: 8081 });
- //1.创建RSA对象，并指定 秘钥长度
-var key = new NodeRSA({ b: 512 });
-key.setOptions({ encryptionScheme: 'pkcs1' });//指定加密格式
- //2.生成 公钥私钥，使用 pkcs8标准，pem格式
-var publicPem = key.exportKey('pkcs8-public-pem');//制定输出格式
-var privatePem = key.exportKey('pkcs8-private-pem');
-server.on('connection', (socket) => {
-    console.log('连接成功',publicPem);
-    // 当有新的新闻时，通过WebSocket发送给客户端
-    const news = '这是一条临时突发新闻';
-    socket.send(publicPem);
-});
-var decrypt = new NodeRSA(privatePem,'pkcs8-private-pem')
-decrypt.setOptions({ encryptionScheme: 'pkcs1', environment: "browser"  })
+// const server = new WebSocket.Server({ port: 8081 });
+//  //1.创建RSA对象，并指定 秘钥长度
+// var key = new NodeRSA({ b: 512 });
+// key.setOptions({ encryptionScheme: 'pkcs1' });//指定加密格式
+//  //2.生成 公钥私钥，使用 pkcs8标准，pem格式
+// var publicPem = key.exportKey('pkcs8-public-pem');//制定输出格式
+// var privatePem = key.exportKey('pkcs8-private-pem');
+// server.on('connection', (socket) => {
+//     console.log('连接成功',publicPem);
+//     // 当有新的新闻时，通过WebSocket发送给客户端
+//     const news = '这是一条临时突发新闻';
+//     socket.send(publicPem);
+// });
+// var decrypt = new NodeRSA(privatePem,'pkcs8-private-pem')
+// decrypt.setOptions({ encryptionScheme: 'pkcs1', environment: "browser"  })
 // app.use() 
 router.get('/users',(req,res) => {   
     const sql = `select * from user`

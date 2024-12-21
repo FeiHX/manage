@@ -24,6 +24,7 @@ const AuditList = React.lazy(()=>import('../views/sandbox/audit-manage/AuditList
 const Unpublish = React.lazy(()=>import('../views/sandbox/publish-manage/Unpublish'))
 const Sunset = React.lazy(()=>import('../views/sandbox/publish-manage/Sunset'))
 const Publish = React.lazy(()=>import('../views/sandbox/publish-manage/Publish'))
+const Chat = React.lazy(()=>import('../views/sandbox/chat/Chat.js'))
 
 const LocalRouterMap = {
     '/home':<Home></Home>,
@@ -40,7 +41,8 @@ const LocalRouterMap = {
     "/publish-manage/unpublished":<Unpublish></Unpublish>,
     "/publish-manage/published":<Publish></Publish>,
     "/publish-manage/sunset":<Sunset></Sunset>,
-
+    "/chat":<Chat></Chat>,
+    
     '/':<Redirect to="/home"/>,
     '*':<NoPermission></NoPermission>,
 }

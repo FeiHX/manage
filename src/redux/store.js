@@ -11,7 +11,7 @@ import { CategoriesReducer } from './reducers/CategoriesReducer.js';
 import {RoleListReducer} from './reducers/RoleListReducer.js';
 import { RightListReducer } from './reducers/RightListReducer.js';
 import { NoticeListReducer } from './reducers/NoticeListReducer.js';
-
+import { ChatMessageReducer } from './reducers/ChatMessageReducer.js';
 const rootReducer = combineReducers({
     CollApsedReducer,
     CurrentUserReducer,
@@ -19,6 +19,7 @@ const rootReducer = combineReducers({
     RoleListReducer,
     RightListReducer,
     NoticeListReducer,
+    ChatMessageReducer,
 })
 const persistConfig = {
     key: 'root',
