@@ -15,6 +15,10 @@ const files = require('./routes/files.js')
 const message = require('./routes/messageRouter.js')
 const expressWs = require('express-ws')(app)
 
+
+
+
+
 app.use(message)
 app.use(express.static("./public/upload"))
 
@@ -31,3 +35,4 @@ app.use(files)
 app.listen(3030,(req,res) => {
     debug('服务器运行在3030端口上!!!!');
 })
+

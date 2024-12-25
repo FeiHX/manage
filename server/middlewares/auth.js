@@ -23,16 +23,6 @@ const authMiddleware = (req,res,next) => {
                 res.status(401).send('无JWT');
                 return
             }
-            const buf = Buffer.from(req.headers.authorization.substring(req.headers.authorization.indexOf(' ')+1), 'base64');
-            const authString = buf.toString('ascii');
-            const jwToken = authString.split(':');
-            sqlFn("select * from authtoken where `jwToken`=?",[jwToken[0]],function(data) {
-                data = JSON.parse(JSON.stringify(data))
-                if(data.length==0) {
-                    res.status(401).send('无效JWT')
-                    return
-                }
-            })
             try{
                 jwt.verify(jwToken[0],jwtSecret)
             }catch(e) {

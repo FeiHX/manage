@@ -26,10 +26,10 @@ router.use(authMiddleware)
 // });
 // var decrypt = new NodeRSA(privatePem,'pkcs8-private-pem')
 // decrypt.setOptions({ encryptionScheme: 'pkcs1', environment: "browser"  })
-// app.use() 
-router.get('/users',(req,res) => {   
+// app.use()
+router.get('/users',(req,res) => {
     const sql = `select * from user`
-    sqlFn(sql,[],function(data) {        
+    sqlFn(sql,[],function(data) {
         cache(req,res,data);
      })
 })
@@ -38,7 +38,7 @@ router.delete('/users',authMiddleware,(req,res)=>{
     const arr = [req.query.id]
     sqlFn(sql,arr,function(){
         res.send('删除成功')
-    })    
+    })
 })
 router.patch('/users',(req,res)=>{
     const {id,roleState} = req.body;
@@ -46,7 +46,7 @@ router.patch('/users',(req,res)=>{
     const arr =[roleState,id]
     sqlFn(sql,arr,function() {
         res.send('修改成功')
-    })   
+    })
 },)
 router.put('/users',(req,res)=>{
     const {username,password,region,roleId} = req.body
@@ -63,7 +63,7 @@ router.put('/users',(req,res)=>{
         }
     })
 
-})  
+})
 router.post('/users',(req,res) => {
     const {username,password} = req.body;
     const sql = "select * from user where `username`=? AND `password`=?"
@@ -86,7 +86,7 @@ router.post('/users',(req,res) => {
         }else{
             res.status(400).send('用户名或者密码错误！')
         }
-    })      
+    })
 })
 router.post('/users/otherlogin',(req,res) => {
     const {username,password} = req.body;
@@ -110,8 +110,8 @@ router.post('/users/otherlogin',(req,res) => {
         }else{
             res.status(400).send('用户名或者密码错误！')
         }
-    })      
-})  
+    })
+})
 router.post('/users/adduser',(req,res)=>{
     let {username,password,roleId,region,role,roleState,roleDefault} = req.body
     let searchsql = 'select * from user where `username`=?'
@@ -121,11 +121,12 @@ router.post('/users/adduser',(req,res)=>{
         }else {
             let sql = "insert into user (`username`,`password`,`roleId`,`region`,`role`,`roleState`,`roleDefault`) values (?,?,?,?,?,?,?)"
             let arr = [username,password,roleId,region,role,roleState,roleDefault]
-            sqlFn(sql,arr,function(data) {            
+            sqlFn(sql,arr,function(data) {
                 res.send('用户添加成功')
             })
         }
     })
-    
+
 })
 module.exports = router;
+

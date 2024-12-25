@@ -45,7 +45,7 @@ router.ws('/websocket/notice',function(ws,req) {
         default:
             ws.on('message',function() {
                 ws.send('heartbeat-response')
-            }) 
+            })
     }
 })
 router.ws('/websocket/chat',function(ws,req) {
