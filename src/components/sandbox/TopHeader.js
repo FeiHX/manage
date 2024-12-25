@@ -84,7 +84,7 @@ function TopHeader(props) {
                 stopHeartbeat();
                 //由于浏览器的节能策略，即使有心跳检测，游览器网页的最小化还是会导致websocket的断开，错误代码1006
                 if(e.code == 1006) {
-                    wssC()
+                    createWss()
                 }
             }
         };
