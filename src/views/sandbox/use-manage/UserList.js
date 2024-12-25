@@ -2,7 +2,7 @@ import React ,{ useEffect, useState, useRef } from 'react'
 import { connect } from 'react-redux'
 import Axios from '../../../utils/myAxios'
 import axios from 'axios'
-import { Table,Button ,Modal, Switch,message} from 'antd'
+import { Table,Button ,Modal, Switch,message,notification} from 'antd'
 import {DeleteOutlined,EditOutlined,ExclamationCircleFilled} from '@ant-design/icons'
 import UserForm from '../../../components/user-manage/UserForm';
 import md5 from 'js-md5'
@@ -169,45 +169,60 @@ function UserList(props) {
             "role":roleObj[value.roleId],
             'password':md5(value.password)
             }).then(res => {
-                if(res.data === 'jwt失效' || res.data === '无jwt'){
-                    throw (new Error('jwt出问题'))
+                if(res.data == '用户添加成功') {
+                    setdataSource([...dataSource,{
+                        region:value.region,
+                        roleId:value.roleId,
+                        username:value.username,
+                        roleState:1,
+                        roleDefault:0
+                    }])
+                    message.success(res.data)
+                }else {
+                    message.error(res.data)
                 }
-                message.success(`用户添加成功`)
-                setdataSource([...dataSource,{
-                    region:value.region,
-                    roleId:value.roleId,
-                    username:value.username,
-                    roleState:1,
-                    roleDefault:0
-                    //要实时更新用户列表（刷新页面前获取roleName），但是roleId要等Axios完后,才能从后端要到对应的roleName
-                    //所以手动从现有的roleList中匹配到id等于roleId的role，得到正确的roleName，与post之后的数据拼接到一起，实时更新用户列表
-                    // role:roleList.filter(item=>item.id===value.roleId)[0]
-                }])
+                notification.info({
+                    message: `通知`,
+                    description:
+                      res.data,
+                      placement: 'bottomRight',
+                      duration:1,
+                });
+                
             })
-        }).catch(err => {
-            console.log(err)
         })
+
     };
     const updateFormOk = (item) => {
         updateForm.current.validateFields().then(value => {
             setisUpdateOpen(false)
             Axios.put(`/api/users?id=${current}`,{...value,'password':md5(value.password)})
             .then((res) => {
-                if(res.data === 'jwt失效' || res.data === '无jwt'){
-                    throw (new Error('jwt出问题'))
-                }
-                message.success( `用户修改成功`)
-                setdataSource(dataSource.map(item => {
-                    if(item.id === current) {
-                        value.password = md5(value.password)
-                        return {
-                            ...item,
-                            ...value,
+                if(res.data=='修改成功') {
+                    setdataSource(dataSource.map(item => {
+                        if(item.id === current) {
+                            value.password = md5(value.password)
+                            return {
+                                ...item,
+                                ...value,
+                            }
                         }
-                    }
-                    return item
-                }))
+                        return item
+                    }))
+                    message.success(res.data)
+                }else {
+                    message.error(res.data)     
+                }
+                notification.info({
+                    message: `通知`,
+                    description:
+                      res.data,
+                      placement: 'bottomRight',
+                      duration:1,
+                  });
+                
             })
+
         })  
     };
     return (

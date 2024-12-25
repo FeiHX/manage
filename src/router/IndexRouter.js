@@ -51,14 +51,13 @@ function Indexrouter(props) {
 
     const routeList1 = []
     for (let item of props.rolelist) {
-        if(item.roleType === props.roleId) {
+        if(item.roleType == props.roleId) {
             for (let right of item.rights) {
                 if(LocalRouterMap[right]){
                     routeList1.push({
                         path:right,
                         element:LocalRouterMap[right]
                     })
-                    // return <Route path={right} element={LocalRouterMap[right]}></Route>
                 }else{
                     routeList1.push({
                         path:right,

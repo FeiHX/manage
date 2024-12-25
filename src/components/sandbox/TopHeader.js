@@ -18,37 +18,37 @@ function TopHeader(props) {
     let  heartbeatTimer = null;
     let lastHeartbeatTime = 0;
     let heartbeatTimeout = null;
-    const heartbeatInterval = 5000; // 5秒发送一次心跳消息
-    const timeoutThreshold = 10000;  // 10秒内未收到响应则认为连接已断开
+    const heartbeatInterval = 30000; // 30秒发送一次心跳消息
+    const timeoutThreshold = 60000;  // 60秒内未收到响应则认为连接已断开
     // 发送心跳消息
-    function sendHeartbeat(ws) {
-        if (ws.readyState === WebSocket.OPEN) {
-            ws.send('heartbeat');
+    function sendHeartbeat(wss) {
+        if (wss.readyState === WebSocket.OPEN) {
+            wss.send('heartbeat');
             lastHeartbeatTime = Date.now();
         }
     }
     // 启动心跳检测
-    function startHeartbeat(ws) {
+    function startHeartbeat(wss) {
         heartbeatTimer = setInterval(() => {
-            sendHeartbeat(ws);
+            sendHeartbeat(wss);
         }, heartbeatInterval);
         // 设置一个超时检测，用于在指定时间内未收到心跳响应时处理连接断开
         const heartbeatTimeout = setTimeout(() => {
             const currentTime = Date.now();
             if (currentTime - lastHeartbeatTime > timeoutThreshold) {
                 console.log('Heartbeat timeout, closing connection');
-                ws.close();
+                wss.close();
             }
-        }, timeoutThreshold + heartbeatInterval); // 加上 heartbeatInterval 以确保在下一轮心跳前检测
+        }, timeoutThreshold + heartbeatInterval); 
     }
     // 重置心跳定时器
-    function resetHeartbeatTimer(ws) {
-        clearTimeout(heartbeatTimeout); // 需要维护 heartbeatTimeout 变量
+    function resetHeartbeatTimer(wss) {
+        clearTimeout(heartbeatTimeout); 
         heartbeatTimeout = setTimeout(() => {
             const currentTime = Date.now();
             if (currentTime - lastHeartbeatTime > timeoutThreshold) {
                 console.log('Heartbeat timeout after reset, closing connection');
-                ws.close();
+                wss.close();
             }
         }, timeoutThreshold);
     }
@@ -58,38 +58,40 @@ function TopHeader(props) {
         clearTimeout(heartbeatTimeout);
     }
     useEffect(()=>{
-        // 创建 WebSocket 连接
-        const ws = new WebSocket(`wss://my-manage.cn/websocket/notice?send=${props.username}`);
-        // 处理连接打开事件
-        ws.onopen = () => {
-            console.log('WebSocket connection opened');
-            startHeartbeat(ws);
-        };
-        // 处理连接错误事件
-        ws.onerror = (error) => {
-            console.log('WebSocket error:', error);
-            stopHeartbeat();
-        };        
-        ws.onmessage = function(msg) {
-            if(msg.data === 'heartbeat-response') {
-                resetHeartbeatTimer(ws);
-            }else {
-                let tempNoticeList = JSON.parse(JSON.stringify(props.noticelist))
-                tempNoticeList.unshift({message:JSON.parse(JSON.parse(msg.data))})
-                props.changeNoticeList(tempNoticeList)    
+        function createWss() {
+            const wss = new WebSocket(`wss://my-manage.cn/websocket/notice?send=${props.username}`);
+            // 处理连接打开事件
+            wss.onopen = () => {
+                startHeartbeat(wss);
+            };
+            // 处理连接错误事件
+            wss.onerror = (error) => {
+                console.error('WebSocket error:', error);
+                stopHeartbeat();
+            }; 
+            //处理接收消息事件       
+            wss.onmessage = function(msg) {
+                if(msg.data === 'heartbeat-response') {
+                    resetHeartbeatTimer(wss);
+                }else {
+                    let tempNoticeList = JSON.parse(JSON.stringify(props.noticelist))
+                    tempNoticeList.unshift({message:JSON.parse(JSON.parse(msg.data))})
+                    props.changeNoticeList(tempNoticeList)    
+                }
             }
-        }
-        // 处理连接关闭事件
-        ws.onclose = function (e) {
-            stopHeartbeat();
-            console.log('websocket 断开: ' + e.code + ' ' + e.reason + ' ' + e.wasClean)
-            console.log(e)
-        }
+            // 处理连接关闭事件
+            wss.onclose = function (e) {
+                stopHeartbeat();
+                //由于浏览器的节能策略，即使有心跳检测，游览器网页的最小化还是会导致websocket的断开，错误代码1006
+                if(e.code == 1006) {
+                    wssC()
+                }
+            }
+        };
+        createWss(); 
     },[props.noticelist])
     const [visible,setVisible] = useState(false)
-    const changeCollapsed = () => {
-        props.changeCollapsed();
-    }
+
     const items = 
         [
             {
@@ -102,11 +104,8 @@ function TopHeader(props) {
                 label: '退出',
                 onClick:(e)=>{
                     props.cleanCurrentUser()
-                Axios.delete(`/api/authtoken`,{data:{'jwToken':localStorage.getItem('jwToken')}}).then(res => {
-                        console.log(res.data)
-                        localStorage.removeItem('jwToken');
-                        localStorage.removeItem('expiresIn')
-                    })
+                    localStorage.removeItem('jwToken');
+                    localStorage.removeItem('expiresIn')
                     window.location.hash="/login" 
                 }
             },
@@ -117,10 +116,10 @@ function TopHeader(props) {
             let rightsmenuchildrenData = JSON.parse(JSON.stringify(data.filter(item=>item.name==='rightsmenuchildren')[0].data))
             let rolesrightsmenuData = JSON.parse(JSON.stringify(data.filter(item=>item.name==='rolesrightsmenu')[0].data))
             Promise.all([
-                Axios.post(`/api/categories/restore`,data.filter(item=>item.name==='categories')[0].data),
-                Axios.post(`/api/rightlist/restore`,data.filter(item=>item.name==='rightsmenu')[0].data),
-                Axios.post(`/api/rightlistchildren/restore`,data.filter(item=>item.name==='rightsmenuchildren')[0].data),
-                Axios.post(`/api/rolelist/restore`,data.filter(item=>item.name==='rolesrightsmenu')[0].data),
+                Axios.post(`/api/categories/restore`,categoriesData),
+                Axios.post(`/api/rightlist/restore`,rightsmenuData),
+                Axios.post(`/api/rightlistchildren/restore`,rightsmenuchildrenData),
+                Axios.post(`/api/rolelist/restore`,rolesrightsmenuData),
             ]).then(res=> {
                 props.restoreCategories(categoriesData);
                 (function() {
@@ -134,6 +133,7 @@ function TopHeader(props) {
                         }
                         rolelist.push(list);
                     }
+                    
                     props.restoreRolelist(rolelist)
                 })();
                 (function() {
@@ -153,7 +153,7 @@ function TopHeader(props) {
         <div>
             <Header style={{ padding: '0,16px', backgroundColor:'white',height:'70px' }}>
                 {
-                    props.isCollapsed ? <MenuUnfoldOutlined onClick={changeCollapsed}></MenuUnfoldOutlined> : <MenuFoldOutlined onClick={changeCollapsed}></MenuFoldOutlined>
+                    props.isCollapsed ? <MenuUnfoldOutlined onClick={props.changeCollapsed}></MenuUnfoldOutlined> : <MenuFoldOutlined onClick={props.changeCollapsed}></MenuFoldOutlined>
                 }  
                 <div style={{float:'right'}}>
                     <span style={{marginRight: "50px"}}><Button onClick={restoreData}>数据库初始化</Button> </span>

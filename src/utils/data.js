@@ -18,7 +18,7 @@ export const data =
     {"id":"14","title":"新闻管理","rightKey":"\/news-manage","pagepermission":"1","grade":"1"},
     {"id":"21","title":"审核管理","rightKey":"\/audit-manage","pagepermission":"1","grade":"1"},
     {"id":"24","title":"发布管理","rightKey":"\/publish-manage","pagepermission":"1","grade":"1"},
-    {"id":"25","title":"聊天","rightKey":"\/chat","pagepermission":"1","grade":"1"}
+    {"id":"28","title":"聊天","rightKey":"\/chat","pagepermission":"1","grade":"1"}
     ]
     }
     ,{"type":"table","name":"rightsmenuchildren","database":"reactlogin","data":
@@ -54,4 +54,9 @@ export const data =
     ]
     }
     ]
+
+
+
+
+    
     

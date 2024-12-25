@@ -50,19 +50,20 @@ router.patch('/users',(req,res)=>{
 },)
 router.put('/users',(req,res)=>{
     const {username,password,region,roleId} = req.body
-    const sql = "update user set `username`=?  , `password`=?  ,  `region`=?  , `roleId`=? where `id`=?"
-    const arr = [username,password,region,roleId,req.query.id];
-    sqlFn(sql,arr,function(){
-        res.send('更新成功')
+    let searchsql = 'select * from user where `username`=? AND `id`!=?'
+    sqlFn(searchsql,[username,req.query.id],function(data) {
+        if(data.length) {
+            res.send('用户名已被占用-修改失败')
+        }else {
+            const sql = "update user set `username`=?  , `password`=?  ,  `region`=?  , `roleId`=? where `id`=?"
+            const arr = [username,password,region,roleId,req.query.id];
+            sqlFn(sql,arr,function(){
+                res.send('修改成功')
+            })
+        }
     })
-})
-function addToken(jwToken) {
-    const sql = "insert into authtoken (`jwToken`) values (?)"
-    const arr = [jwToken]
-    sqlFn(sql,arr,function() {
 
-    })
-}   
+})  
 router.post('/users',(req,res) => {
     const {username,password} = req.body;
     const sql = "select * from user where `username`=? AND `password`=?"
@@ -78,7 +79,6 @@ router.post('/users',(req,res) => {
                     region:data[0].region,
                     role:data[0].role
                 },jwtSecret,{expiresIn})
-                addToken(token);
                 res.send({'token':token,'expiresIn':expiresIn})
             }else {
                 res.status(400).send('账号被封禁，请联系管理员！')
@@ -103,7 +103,6 @@ router.post('/users/otherlogin',(req,res) => {
                     region:data[0].region,
                     role:data[0].role
                 },jwtSecret,{expiresIn:10})
-                addToken(token);
                 res.send({'token':token,'expiresIn':60})
             }else {
                 res.status(400).send('账号被封禁，请联系管理员！')
@@ -115,14 +114,18 @@ router.post('/users/otherlogin',(req,res) => {
 })  
 router.post('/users/adduser',(req,res)=>{
     let {username,password,roleId,region,role,roleState,roleDefault} = req.body
-    let sql = "insert into user (`username`,`password`,`roleId`,`region`,`role`,`roleState`,`roleDefault`) values (?,?,?,?,?,?,?)"
-    let arr = [username,password,roleId,region,role,roleState,roleDefault]
-    sqlFn(sql,arr,function(data) {            
-        if(data.affectedRows) {                   
-            res.send(data)
-        }else{
-            res.status(400).json(new Error('注册失败'))
+    let searchsql = 'select * from user where `username`=?'
+    sqlFn(searchsql,[username],function(data) {
+        if(data.length) {
+            res.send('用户名已被占用-注册失败')
+        }else {
+            let sql = "insert into user (`username`,`password`,`roleId`,`region`,`role`,`roleState`,`roleDefault`) values (?,?,?,?,?,?,?)"
+            let arr = [username,password,roleId,region,role,roleState,roleDefault]
+            sqlFn(sql,arr,function(data) {            
+                res.send('用户添加成功')
+            })
         }
     })
+    
 })
 module.exports = router;
