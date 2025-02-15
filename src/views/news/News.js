@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import { Card, Col, Row, List, Select, Layout} from 'antd';
-import _ from 'loadsh';
+import _ from 'lodash';
 import './News.css'
 import withRoute from '../../components/sandbox/withRoute'
 const { Header } = Layout;

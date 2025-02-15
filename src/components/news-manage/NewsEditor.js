@@ -70,7 +70,6 @@ export default function NewsEditor(props) {
         })
     }
     return (
-        <div>
             <Editor
                 editorState={editorState}
                 toolbarClassName="toolbarClassName"
@@ -91,8 +90,7 @@ export default function NewsEditor(props) {
                         alt: {present: false, mandatory: false,previewImage: true}
                     },
                   }}
-            />;
-        </div>
+            />
   )
 }
 
