@@ -1,0 +1,56 @@
+// Auth
+export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+export const LOGOUT = 'LOGOUT';
+export const CLEAR_LOGIN = 'CLEAR_LOGIN';
+export const FORGOT_PASSWORD = 'FORGOT_PASSWORD';
+export const RESET_PASSWORD = 'RESET_PASSWORD';
+export const CHANGE_PASSWORD = 'CHANGE_PASSWORD';
+export const AUTH_ERROR = 'AUTH_ERROR';
+export const LOADING_AUTH = 'LOADING_AUTH';
+
+// Alerts
+export const SET_ALERT = 'SET_ALERT';
+export const RESET_ALERT = 'RESET_ALERT';
+
+// Post and discussion
+export const POST_CREATE = 'POST_CREATE';
+export const POST_RESET = 'POST_RESET';
+export const CLEAR_POST = 'CLEAR_POST';
+export const ADD_COMMENT = 'ADD_COMMENT';
+export const DELETE_COMMENT = 'DELETE_COMMENT';
+export const ON_CHANGE = 'ON_CHANGE';
+export const GET_POST = 'GET_POST';
+export const GET_ALL_POST = 'GET_ALL_POST';
+export const POST_NEXT_PAGE = 'POST_NEXT_PAGE';
+export const UPDATE_POST = 'UPDATE_POST';
+export const DELETE_POST = 'DELETE_POST';
+export const SEARCH_POSTS = 'SEARCH_POSTS';
+export const POST_LOADING = 'POST_LOADING';
+export const POST_ERROR = 'POST_ERROR';
+export const ERROR = 'ERROR';
+export const TOGGLE_CREATE_POST = 'TOGGLE_CREATE_POST';
+export const TOGGLE_EDIT_POST = 'TOGGLE_EDIT_POST';
+export const LOADING_SUBMIT_POST = 'LOADING_SUBMIT_POST';
+export const GET_POST_ERROR = 'GET_POST_ERROR'
+
+// User
+export const UPDATE_ME = 'UPDATE_ME';
+export const UPDATE_FAILED = 'UPDATE_FAILED';
+export const GET_ALL_USERS = 'GET_ALL_USERS';
+export const TOGGLE_MODERATOR = 'TOGGLE_MODERATOR';
+export const USER_ERROR = 'USER_ERROR';
+export const DEACTIVATE_USER = 'DEACTIVATE_USER';
+export const ACTIVATE_USER = 'ACTIVATE_USER';
+export const LOADING_USER = 'LOADING_USER';
+export const MAKE_COMMITTEE = 'MAKE_COMMITTEE';
+export const REMOVE_COMMITTEE = 'REMOVE_COMMITTEE';
+
+// Announcements
+export const TOGGLE_CREATE_ANNOUNCEMENT = 'TOGGLE_CREATE_ANNOUNCEMENT';
+export const CREATE_ANNOUNCEMENT = 'CREATE_ANNOUNCEMENT';
+export const GET_ALL_ANNOUNCEMENT = 'GET_ALL_ANNOUNCEMENT';
+export const DELETE_ANNOUNCEMENT = 'DELETE_ANNOUNCEMENT';
+export const UPDATE_ANNOUNCEMENT = 'UPDATE_ANNOUNCEMENT';
+export const LOADING_ANNOUNCEMENT_SUBMIT = 'LOADING_ANNOUNCEMENT_SUBMIT';
+export const ANNOUNCEMENT_ERROR = 'ANNOUNCEMENT_ERROR';
