@@ -1,7 +1,7 @@
 .hidden {
   display: none;
 }
- .upload_progress .value {
+.upload_progress .value {
   position: absolute;
   top: 0;
   left: 0;
@@ -12,6 +12,10 @@
   transition: width .3s;
 }
 .rc-select {
+  /* display: inline-block;
+  font-size: 12px;
+  width: 1000px;
+  position: relative; */
   position: relative;
   background-color: #fff;
   border: 1px solid #d9d9d9;
@@ -21,4 +25,18 @@
   width: 100%;
   height: 32px;
   padding: 0 0px;
+}
+.rc-select-single:not(.rc-select-customize-input) .rc-select-selector {
+  padding: 1px;
+  /* border: 1px solid #000; */
+}
+.rc-select-multiple .rc-select-selector {
+  display: flex;
+  padding: 1px;
+  /* border: 1px solid #000; */
+}
+.rc-select-focused .rc-select-selector {
+  /* width: 100%;
+  height: 100%; */
+  border-color: blue !important;
 }
