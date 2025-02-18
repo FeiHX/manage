@@ -16,6 +16,7 @@
   font-size: 12px;
   width: 1000px;
   position: relative; */
+  font-size: 20px;
   position: relative;
   background-color: #fff;
   border: 1px solid #d9d9d9;
@@ -27,11 +28,11 @@
   padding: 0 0px;
 }
 .rc-select-single:not(.rc-select-customize-input) .rc-select-selector {
-  padding: 1px;
+  padding: 0px;
   border: 0px solid #000;
 }
 .rc-select-multiple .rc-select-selector {
   display: flex;
-  padding: 1px;
+  padding: 0px;
   border: 0px solid #000;
 }
