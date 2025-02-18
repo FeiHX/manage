@@ -1,7 +1,6 @@
 import React, { useRef } from "react";
 import { useState } from "react";
 import { Steps, Button, Form, Input, message, notification } from "antd";
-import  './NewsAdd.css'
 import Axios from "../../../utils/myAxios";
 import NewsEditor from "../../../components/news-manage/NewsEditor";
 import { connect } from "react-redux";
@@ -9,6 +8,10 @@ import withRoute from "../../../components/sandbox/withRoute";
 import Select, { Option } from "rc-select";
 import "rc-select/assets/index.css";
 import 'antd/dist/reset.css';
+import Select ,  {Option} from 'rc-select';
+import 'rc-select/assets/index.css';
+import 'antd/dist/reset.css';
+import  './NewsAdd.css'
 function NewsAdd(props) {
   const NewsForm = useRef(null);
   const [current, setCurrent] = useState(0);
