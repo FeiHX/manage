@@ -28,10 +28,10 @@
 }
 .rc-select-single:not(.rc-select-customize-input) .rc-select-selector {
   padding: 1px;
-  /* border: 1px solid #000; */
+  border: 0px solid #000;
 }
 .rc-select-multiple .rc-select-selector {
   display: flex;
   padding: 1px;
-  /* border: 1px solid #000; */
+  border: 0px solid #000;
 }
