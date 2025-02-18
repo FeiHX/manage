@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 import withRoute from "../../../components/sandbox/withRoute";
 import Select, { Option } from "rc-select";
 import "rc-select/assets/index.css";
-
+import 'antd/dist/reset.css';
 function NewsAdd(props) {
   const NewsForm = useRef(null);
   const [current, setCurrent] = useState(0);
