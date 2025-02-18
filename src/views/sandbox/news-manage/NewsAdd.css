@@ -21,7 +21,7 @@
   transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
   width: 100%;
   height: 32px;
-  padding: 2 0px;
+  padding: 0 2px;
 }
 .rc-select-single:not(.rc-select-customize-input) .rc-select-selector { /*替换rc-select的原样式*/
   padding: 0px;
