@@ -26,7 +26,7 @@ function NewsAdd(props) {
           console.log(error);
         });
     } else {
-      if (!content) {
+      if (content === "" || content.replace(/\s+/g, '') === '<p></p>') {
         message.error("新闻内容不能为空");
       } else {
         setCurrent(current + 1);
