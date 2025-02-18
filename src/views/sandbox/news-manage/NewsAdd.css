@@ -1,3 +1,13 @@
 .hidden {
   display: none;
 }
+ .upload_progress .value {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  height: 100%;
+  width: 0%;
+  background: #67c23a;
+  transition: width .3s;
+}
