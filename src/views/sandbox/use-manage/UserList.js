@@ -113,7 +113,7 @@ function UserList(props) {
                         onClick = {()=>{
                             handleUpdate(item)
                         }} 
-                    >修改</Button>
+                    ></Button>
                 </div>
             }
         },
