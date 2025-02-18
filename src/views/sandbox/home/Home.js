@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useMemo } from "react";
 import { Card, Col, Row, List, Avatar, Button, Drawer } from "antd";
 import {
-  EllipsisOutlined,
+  EditOutlined,
   BarChartOutlined,
 } from "@ant-design/icons";
 import axios from "axios";
@@ -188,8 +188,8 @@ function Home(props) {
                 <img alt="example" height="100%" width="100%" src={img1} />
               }
               actions={[
-                <EllipsisOutlined
-                  key="ellipsis"
+                <EditOutlined
+                  key="edit"
                   placeholder="chart"
                   onClick={async () => {
                     await setOpen(true);
