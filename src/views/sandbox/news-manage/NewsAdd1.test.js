@@ -1,221 +1,322 @@
 import React from "react";
-import NewsAdd from "./NewsAdd";
+import NewsAdd from "../sandbox/news-manage/NewsAdd";
 import userEvent from "@testing-library/user-event";
-// import { render  } from '../../test/test-utils';
-import { render } from "../../../test/test-utils";
-import { act, screen,render as myrender,within,waitFor } from "@testing-library/react";
+import {
+  act,
+  screen,
+  render as myrender,
+  within,
+  waitFor
+} from "@testing-library/react";
 import { Provider } from "react-redux";
-import { store } from "../../../redux/store";
 import { fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 
-
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
+import configureStore from "redux-mock-store";
+import thunk from "redux-thunk";
 
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 
+const mockedNavigate = jest.fn();
+jest.mock("react-router-dom", () => ({
+  ...jest.requireActual("react-router-dom"),
+  useNavigate: () => mockedNavigate // 直接返回模拟函数
+}));
 
-
-
-
-
-
-
-
-
-
-
-
-  
-
-describe('12344',()=>{
-    test('123',async()=>{
-
-        let store = mockStore({CategoriesReducer:{categories: [
+describe("12344", () => {
+  test(
+    "123",
+    async () => {
+      let store = mockStore({
+        CategoriesReducer: {
+          categories: [
             {
-                "id": 1,
-                "title": "时事新闻",
-                "value": "时事新闻"
+              id: 1,
+              title: "时事新闻",
+              value: "时事新闻"
             },
             {
-                "id": 2,
-                "title": "环球经济",
-                "value": "环球经济"
+              id: 2,
+              title: "环球经济",
+              value: "环球经济"
             },
             {
-                "id": 3,
-                "title": "科学技术",
-                "value": "科学技术"
+              id: 3,
+              title: "科学技术",
+              value: "科学技术"
             },
             {
-                "id": 4,
-                "title": "军事世界",
-                "value": "军事世界"
+              id: 4,
+              title: "军事世界",
+              value: "军事世界"
             },
             {
-                "id": 5,
-                "title": "世界体育",
-                "value": "世界体育"
+              id: 5,
+              title: "世界体育",
+              value: "世界体育"
             },
             {
-                "id": 6,
-                "title": "生活理财",
-                "value": "生活理财"
+              id: 6,
+              title: "生活理财",
+              value: "生活理财"
             }
-        ]},CurrentUserReducer:{region:'1',username:'1',roleId:'1'}});
-    
-        myrender(                <Provider store={store}>
-            <MemoryRouter>
-                <NewsAdd />
-            </MemoryRouter>
-            
-        </Provider>)
-        const NewsAddTitle = await screen.findByText('撰写新闻');   
-        expect(NewsAddTitle).toBeInTheDocument()
+          ]
+        },
+        CurrentUserReducer: { region: "1", username: "1", roleId: "1" }
+      });
 
-        const nextText = await screen.findByText('下一步');   
-        userEvent.click(nextText);
-        const titleError = await screen.findByText('Please input your title!')
-        const subheadingError = await screen.findByText('Please input your subheading!')
-        const categoryError = await screen.findByText('Please input your category!')
-        expect(titleError).toBeInTheDocument()
-        expect(subheadingError).toBeInTheDocument()
-        expect(categoryError).toBeInTheDocument()
+      myrender(
+        <Provider store={store}>
+          <MemoryRouter>
+            <NewsAdd />
+          </MemoryRouter>
+        </Provider>
+      );
+      const NewsAddTitle = await screen.findByText("撰写新闻");
+      expect(NewsAddTitle).toBeInTheDocument();
+      // 第一步：验证初始状态
+      // await waitFor(async () => {
+      //   expect(await screen.findByText(/current::0/)).toBeInTheDocument();
+      // });
 
-        const NewsTitleInput = await screen.getByPlaceholderText('title');
-        await userEvent.type(NewsTitleInput, 'NewsTitle')
-        expect(NewsTitleInput.value).toBe('NewsTitle');
+      // 第二步：填写表单并提交
+      // 重新获取按钮引用
+      const firstNextButton = await screen.getByPlaceholderText("nextStep");
+      expect(firstNextButton).toBeInTheDocument();
+      await userEvent.click(firstNextButton);
 
-        const SubheadingInput = await screen.getByPlaceholderText('subheading');
-        await userEvent.type(SubheadingInput, 'Subheading')
-        expect(SubheadingInput.value).toBe('Subheading');
+      // 第三步：验证表单错误提示
+      await waitFor(async () => {
+        expect(
+          await screen.findByText("Please input your title!")
+        ).toBeInTheDocument();
+      });
 
-        // const categoriesSelect = await screen.getByText('categories');
-        // expect(categoriesSelect).toBeInTheDocument()
-        // userEvent.click(categoriesSelect);
+      // 第四步：输入标题和副标题
+      const titleInput = await screen.findByPlaceholderText("title");
+      await userEvent.type(titleInput, "NewsTitle");
 
-        const select = screen.getByRole('combobox');
-        // select.click();   
-        expect(select).toBeInTheDocument()
-        fireEvent.mouseDown(select); 
-        // userEvent.click(select);
+      const subheadingInput = await screen.findByPlaceholderText("subheading");
+      await userEvent.type(subheadingInput, "Subheading");
 
-        const categoryItem = await screen.getByText('时事新闻')
-        userEvent.click(categoryItem);
-        expect(categoryItem).toBeInTheDocument()
+      // 第五步：选择分类
+      const categorySelect = await screen.findByRole("combobox");
+      fireEvent.mouseDown(categorySelect);
+      const categoryItem = await screen.findByText("时事新闻");
+      await userEvent.click(categoryItem);
 
-        // userEvent.click(categoryItem);
-        const nextStep = await screen.findByText('下一步')   
-        userEvent.click(nextStep);
-        // const emptyError = await screen.findByText('新闻内容不能为空1')     
-        // expect(emptyError).toBeInTheDocument()
-  
-        // const usernameInput = await screen.getByPlaceholderText('Username');
-        // await userEvent.type(usernameInput, 'admin')
-        // expect(usernameInput.value).toBe('admin');
-        // const passwordInput = await screen.getByPlaceholderText('Password');
-        // await userEvent.type(passwordInput, 'adminpassword')
-        // expect(passwordInput.value).toBe('adminpassword');
+      // 第六步：进入内容编辑步骤（关键修改）
+      const secondNextButton = await screen.findByPlaceholderText("nextStep"); // 重新获取按钮
+      expect(secondNextButton).toBeInTheDocument();
+      await userEvent.click(secondNextButton);
+      await waitFor(
+        async () => {
+          expect(await screen.findByText(/current::1/)).toBeInTheDocument();
+        },
+        { timeout: 8000 }
+      );
 
+      // 第七步：处理富文本输入（正确方式）
+      await waitFor(
+        async () => {
+          const draftContainer = await screen.findByPlaceholderText(
+            "react-draft-wysiwyg"
+          );
+          expect(draftContainer).toBeInTheDocument();
 
-
-
-        const draftContainer = await screen.getByPlaceholderText('react-draft-wysiwyg');
-        expect(draftContainer).toBeInTheDocument();   
-    
-        const editor = within(draftContainer).getByRole('textbox');
-        expect(editor).toBeInTheDocument();
-        // const editor = screen.getByRole('textbox');
+          const editor = within(draftContainer).getByRole("textbox");
+          expect(editor).toBeInTheDocument();
+          // const editor = screen.getByRole('textbox');
           // 直接输入文本（需 Draft.js 支持 DOM 事件）
-        fireEvent.change(editor, { target: { textContent: 'Hello World' } });
-        expect(editor.textContent).toBe('Hello World');
-
-        
-        const newsContent = await screen.getByText('Hello World')
-        expect(newsContent).toBeInTheDocument()
-
-        
-        const saveOrNextOrPre = screen.getByPlaceholderText('saveOrNextOrPre');
-        expect(saveOrNextOrPre).toBeInTheDocument(); 
-        const nextText2 =  within(saveOrNextOrPre).getByPlaceholderText('nextStep');  
-
-        expect(nextText2).toBeInTheDocument() 
-        userEvent.click(nextText2); 
-         
-        // const draftContainer1 = await screen.getByPlaceholderText('react-draft-wysiwyg');
-        // expect(draftContainer1).toBeInTheDocument();  
-  
-    
-       
-        // saveOrNextOrPre
-        await waitFor(() => {
-            
-
-
-
-            const preStep = within(saveOrNextOrPre).getByPlaceholderText('preStep');
-            expect(preStep).toBeInTheDocument() 
-            // userEvent.click(preStep); 
-            // const preText2 =  screen.getByPlaceholderText('preStep');  
-        
-            // expect(preText2).toBeInTheDocument()
-            // const saveOrSend = within(saveOrNextOrPre).getByPlaceholderText('saveDraft')
-            // expect(saveOrSend).toBeInTheDocument()
-      
-      
+          // await userEvent.click(editor);
+          // await userEvent.type(editor,  "Hello World" );
+          await fireEvent.change(editor, {
+            target: { textContent: "Hello World" }
           });
+          expect(editor.textContent).toBe("Hello World");
+          // expect(await screen.findByText(/请输入新闻内容！！！/)).toBeInTheDocument();
+          // expect(await screen.findByText(/注意!新闻内容为初始！！请输入新闻内容！！！/)).toBeInTheDocument();
+          // await fireEvent.blur(editor);
+        },
+        { timeout: 5000 }
+      );
 
-  
+      // 第八步：进入提交步骤
+      const finalNextButton = await screen.findByPlaceholderText("nextStep"); // 再次获取新按钮
+      expect(finalNextButton).toBeInTheDocument();
+      await userEvent.click(finalNextButton);
+      // 最终验证（必须使用findBy*）
+      await waitFor(
+        async () => {
+          // expect(await screen.findByText(/新闻内容不能为空/)).toBeInTheDocument();
+          // expect(await screen.findByText(/current::2/)).toBeInTheDocument();
+          expect(
+            await screen.findByPlaceholderText("saveDraft")
+          ).toBeInTheDocument();
+          await userEvent.click(
+            await screen.findByPlaceholderText("saveDraft")
+          );
+        },
+        { timeout: 8000 }
+      );
 
-        // await waitFor(() => {
- 
-        //     const saveOrSend = screen.getByPlaceholderText('saveDraft')
-        //     expect(saveOrSend).toBeInTheDocument()
-      
-        //   });
+      await waitFor(
+        async () => {
+          // expect(await screen.findByText(/新闻内容不能为空/)).toBeInTheDocument();
+          expect(await screen.findByText(/您可以到草稿箱中查看您的新闻/)).toBeInTheDocument();
+          expect(mockedNavigate).toHaveBeenCalledWith("/news-manage/draft");
+        },
+        { timeout: 8000 }
+      );
+    },
+    65000
+  );
 
-    })
-},15000)
+  test(
+    "123",
+    async () => {
+      let store = mockStore({
+        CategoriesReducer: {
+          categories: [
+            {
+              id: 1,
+              title: "时事新闻",
+              value: "时事新闻"
+            },
+            {
+              id: 2,
+              title: "环球经济",
+              value: "环球经济"
+            },
+            {
+              id: 3,
+              title: "科学技术",
+              value: "科学技术"
+            },
+            {
+              id: 4,
+              title: "军事世界",
+              value: "军事世界"
+            },
+            {
+              id: 5,
+              title: "世界体育",
+              value: "世界体育"
+            },
+            {
+              id: 6,
+              title: "生活理财",
+              value: "生活理财"
+            }
+          ]
+        },
+        CurrentUserReducer: { region: "1", username: "1", roleId: "1" }
+      });
 
+      myrender(
+        <Provider store={store}>
+          <MemoryRouter>
+            <NewsAdd />
+          </MemoryRouter>
+        </Provider>
+      );
+      const NewsAddTitle = await screen.findByText("撰写新闻");
+      expect(NewsAddTitle).toBeInTheDocument();
+      // 第一步：验证初始状态
+      // await waitFor(async () => {
+      //    expect(await screen.findByText(/current::0/)).toBeInTheDocument();
+      // });
 
+      // 第二步：填写表单并提交
+      // 重新获取按钮引用
+      const firstNextButton = await screen.getByPlaceholderText("nextStep");
+      expect(firstNextButton).toBeInTheDocument();
+      await userEvent.click(firstNextButton);
 
-// components/Counter.test.js
-// import React from 'react';
-// import { render, screen, fireEvent } from '@testing-library/react';
-// import { Provider } from 'react-redux';
-// import { createStore } from 'redux';
-// import Counter from './Counter';
-// import counterReducer from '../reducers/counter';
+      // 第三步：验证表单错误提示
+      await waitFor(async () => {
+        expect(
+          await screen.findByText("Please input your title!")
+        ).toBeInTheDocument();
+      });
 
-// const renderWithRedux = (component, { initialState, store = createStore(counterReducer, initialState) } = {}) => {
-//   return {
-//     ...render(<Provider store={store}>{component}</Provider>),
-//     store,
-//   };
-// };
+      // 第四步：输入标题和副标题
+      const titleInput = await screen.findByPlaceholderText("title");
+      await userEvent.type(titleInput, "NewsTitle");
 
-// test('renders with initial state', () => {
-//   renderWithRedux(<Counter />, { initialState: { count: 0 } });
+      const subheadingInput = await screen.findByPlaceholderText("subheading");
+      await userEvent.type(subheadingInput, "Subheading");
 
-//   expect(screen.getByText('Count: 0')).toBeInTheDocument();
-// });
+      // 第五步：选择分类
+      const categorySelect = await screen.findByRole("combobox");
+      fireEvent.mouseDown(categorySelect);
+      const categoryItem = await screen.findByText("时事新闻");
+      await userEvent.click(categoryItem);
 
-// test('dispatches INCREMENT action', () => {
-//   const { store } = renderWithRedux(<Counter />, { initialState: { count: 0 } });
+      // 第六步：进入内容编辑步骤（关键修改）
+      const secondNextButton = await screen.findByPlaceholderText("nextStep"); // 重新获取按钮
+      expect(secondNextButton).toBeInTheDocument();
+      await userEvent.click(secondNextButton);
+      await waitFor(
+        async () => {
+          expect(await screen.findByText(/current::1/)).toBeInTheDocument();
+        },
+        { timeout: 8000 }
+      );
 
-//   fireEvent.click(screen.getByText('Increment'));
+      // 第七步：处理富文本输入（正确方式）
+      await waitFor(
+        async () => {
+          const draftContainer = await screen.findByPlaceholderText(
+            "react-draft-wysiwyg"
+          );
+          expect(draftContainer).toBeInTheDocument();
 
-//   expect(store.getState()).toEqual({ count: 1 });
-// });
+          const editor = within(draftContainer).getByRole("textbox");
+          expect(editor).toBeInTheDocument();
+          // const editor = screen.getByRole('textbox');
+          // 直接输入文本（需 Draft.js 支持 DOM 事件）
+          // await userEvent.click(editor);
+          // await userEvent.type(editor,  "Hello World" );
+          await fireEvent.change(editor, {
+            target: { textContent: "Hello World" }
+          });
+          expect(editor.textContent).toBe("Hello World");
+          // expect(await screen.findByText(/请输入新闻内容！！！/)).toBeInTheDocument();
+          // expect(await screen.findByText(/注意!新闻内容为初始！！请输入新闻内容！！！/)).toBeInTheDocument();
+          // await fireEvent.blur(editor);
+        },
+        { timeout: 5000 }
+      );
 
-// test('dispatches DECREMENT action', () => {
-//   const { store } = renderWithRedux(<Counter />, { initialState: { count: 0 } });
+      // 第八步：进入提交步骤
+      const finalNextButton = await screen.findByPlaceholderText("nextStep"); // 再次获取新按钮
+      expect(finalNextButton).toBeInTheDocument();
+      await userEvent.click(finalNextButton);
+      // 最终验证（必须使用findBy*）
+      await waitFor(
+        async () => {
+          // expect(await screen.findByText(/新闻内容不能为空/)).toBeInTheDocument();
+          // expect(await screen.findByText(/current::2/)).toBeInTheDocument();
+          expect(
+            await screen.findByPlaceholderText("submit")
+          ).toBeInTheDocument();
+          await userEvent.click(await screen.findByPlaceholderText("submit"));
+        },
+        { timeout: 8000 }
+      );
 
-//   fireEvent.click(screen.getByText('Decrement'));
-
-//   expect(store.getState()).toEqual({ count: -1 });
-// });
-
-
+      await waitFor(
+        async () => {
+          expect(
+            await screen.findByText(/您可以到审核列表中查看您的新闻/)
+          ).toBeInTheDocument();
+          expect(mockedNavigate).toHaveBeenCalledWith("/audit-manage/list");
+        },
+        { timeout: 8000 }
+      );
+    },
+    65000
+  );
+});
