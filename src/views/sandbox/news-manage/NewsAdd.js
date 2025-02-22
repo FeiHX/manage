@@ -5,19 +5,21 @@ import Axios from "../../../utils/myAxios";
 import NewsEditor from "../../../components/news-manage/NewsEditor";
 import { connect } from "react-redux";
 import withRoute from "../../../components/sandbox/withRoute";
-import Select ,  {Option} from 'rc-select';
-import 'rc-select/assets/index.css';
-import 'antd/dist/reset.css';
-import  './NewsAdd.css'
+import Select, { Option } from "rc-select";
+import "rc-select/assets/index.css";
+import "antd/dist/reset.css";
+import "./NewsAdd.css";
+
 function NewsAdd(props) {
   const NewsForm = useRef(null);
   const [current, setCurrent] = useState(0);
   const [formInfo, setFormInfo] = useState({});
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState("请输入新闻内容！！！");
+
   let handlerNext = () => {
     if (current === 0) {
       NewsForm.current
-        .validateFields()
+        ?.validateFields()
         .then(res => {
           setFormInfo(res);
           setCurrent(current + 1);
@@ -26,9 +28,12 @@ function NewsAdd(props) {
           console.log(error);
         });
     } else {
-      if (content === "" || content.replace(/\s+/g, '') === '<p></p>') {
+      if (content.replace(/\s+/g, "") == "<p></p>") {
         message.error("新闻内容不能为空");
-      } else {
+      }else if(content === "请输入新闻内容！！！" ){
+        message.error("注意!新闻内容为初始！！请输入新闻内容！！！");
+        setCurrent(current + 1);
+      }else {
         setCurrent(current + 1);
       }
     }
@@ -79,6 +84,9 @@ function NewsAdd(props) {
   return (
     <div>
       <h1>撰写新闻</h1>
+      <h1>
+        current::{current}
+      </h1>
       <Steps
         current={current}
         items={[
@@ -141,40 +149,39 @@ function NewsAdd(props) {
           </Form>
         </div>
       </div>
-      <div
-        className={current === 1 ? "" : "hidden"}
-        placeholder="react-draft-wysiwyg"
-      >
-        <NewsEditor
-          content={content}
-          getContent={value => {
-            setContent(value);
-          }}
-        />
+      <div className={current === 1 ? "" : "hidden"} placeholder="react-draft-wysiwyg">
+          <NewsEditor className={current === 1 ? "" : "hidden"}
+            content={content}
+            getContent={value => {
+              setContent(value);
+            }}
+          />
       </div>
-      <div className={current === 2 ? "" : "hidden"} />
-      <div placeholder="saveOrNextOrPre" style={{ marginTop: "50px" }}>
-        {current === 2 &&
+      <div style={{ marginTop: "50px" }}>
+        {current == 2 &&
           <span>
-            <Button
-              placeholder="saveDraft"
-              type="primary"
-              onClick={() => handleSave(0)}
-            >
-              保存草稿箱
-            </Button>
-            <Button danger onClick={() => handleSave(1)}>
-              提交审核
-            </Button>
-          </span>}
+             <Button
+                placeholder="saveDraft"
+                type="primary"
+                onClick={() => handleSave(0)}
+              >
+                保存草稿箱
+              </Button>
+              <Button danger placeholder="submit" onClick={() => handleSave(1)}>
+                提交审核
+              </Button> 
+          </span>
+          }
         {current < 2 &&
           <Button placeholder="nextStep" type="primary" onClick={handlerNext}>
             下一步
-          </Button>}
+          </Button>
+          }
         {current > 0 &&
-          <Button placeholder="preStep" onClick={handlerPrevious}>
-            上一步
-          </Button>}
+            <Button placeholder="preStep" onClick={handlerPrevious}>
+              上一步
+            </Button>  
+}
       </div>
     </div>
   );
