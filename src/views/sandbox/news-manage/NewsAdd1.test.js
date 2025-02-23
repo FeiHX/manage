@@ -21,7 +21,7 @@ const mockStore = configureStore(middlewares);
 const mockedNavigate = jest.fn();
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
-  useNavigate: () => mockedNavigate // 直接返回模拟函数
+  useNavigate: () => mockedNavigate 
 }));
 
 describe("12344", () => {
