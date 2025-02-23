@@ -1,5 +1,5 @@
 import React from "react";
-import NewsAdd from "./sandbox/news-manage/NewsAdd";
+import NewsAdd from "./NewsAdd";
 import userEvent from "@testing-library/user-event";
 import {
   act,
