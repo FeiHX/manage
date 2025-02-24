@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button } from 'antd'
+import { Button, message} from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import axios from 'axios'
 import './Detail.css'
@@ -30,6 +30,8 @@ function Detail(props) {
         })
         axios.patch(`/api/news/preview/star?id=${ props.history.param.id }`,{
             star:newInfo.star + 1
+        }).then(() => {
+            message.success('点赞成功！')
         })
     }
     return (
