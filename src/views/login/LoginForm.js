@@ -27,7 +27,6 @@ function LoginForm(props) {
         props.history.push("/home");
       },
       err => {
-        console.log(err, err.response.data);
         notification.info({
           message: `通知`,
           description: `${err.response.data}`,

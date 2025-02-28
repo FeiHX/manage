@@ -84,9 +84,6 @@ function NewsAdd(props) {
   return (
     <div>
       <h1>撰写新闻</h1>
-      <h1>
-        current::{current}
-      </h1>
       <Steps
         current={current}
         items={[
