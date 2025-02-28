@@ -1,10 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+Axiosimport React, { useEffect, useRef, useState } from "react";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { EditorState, convertToRaw, ContentState } from "draft-js";
 import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
-import axios from "axios";
+import Axios from "../../utils/myAxios";
 import { message } from "antd";
 export default function NewsEditor(props) {
   const [editorState, setEditorState] = useState("");
@@ -59,14 +59,14 @@ export default function NewsEditor(props) {
       formData.append("chunkIndex", i);
       formData.append("totalChunks", totalChunks);
       formData.append("uuid", uuid);
-      await axios({
+      await Axios({
         method: "post",
         url: "/api/files",
         headers: { "Content-Type": "multipart/form-data" },
         data: formData
       });
     }
-    const { data } = await axios.post("/api/merge", {
+    const { data } = await Axios.post("/api/merge", {
       filename: originalName,
       uuid,
       totalChunks
