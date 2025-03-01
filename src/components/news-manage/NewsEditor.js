@@ -51,6 +51,7 @@ export default function NewsEditor(props) {
     const chunkSize = 2 * 1024 * 1024; // 2MB
     const totalChunks = Math.ceil(blob.size / chunkSize);
     const uuid = Date.now().toString(36); // 生成唯一标识
+    const uploadPromises = [];
     for (let i = 0; i < totalChunks; i++) {
       const chunk = blob.slice(i * chunkSize, (i + 1) * chunkSize);
       const formData = new FormData();
@@ -59,13 +60,22 @@ export default function NewsEditor(props) {
       formData.append("chunkIndex", i);
       formData.append("totalChunks", totalChunks);
       formData.append("uuid", uuid);
-      await Axios({
-        method: "post",
-        url: "/api/files",
-        headers: { "Content-Type": "multipart/form-data" },
-        data: formData
-      });
+      // await Axios({
+      //   method: "post",
+      //   url: "/api/files",
+      //   headers: { "Content-Type": "multipart/form-data" },
+      //   data: formData
+      // });
+      uploadPromises.push(
+        Axios({
+          method: "post",
+          url: "/api/files",
+          headers: { "Content-Type": "multipart/form-data" },
+          data: formData
+        })
+      );
     }
+    await Promise.all(uploadPromises);
     const { data } = await Axios.post("/api/merge", {
       filename: originalName,
       uuid,
