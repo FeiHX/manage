@@ -76,12 +76,14 @@ export default function NewsEditor(props) {
       );
     }
     await Promise.all(uploadPromises);
-    const { data } = await Axios.post("/api/merge", {
+    await Axios.post("/api/merge", {
       filename: originalName,
       uuid,
       totalChunks
+    }).then(() => {
+      console.log('merge到这')
+      resolve({ data: { link: fileUrl } })
     });
-    return data.fileLink;
   };
   const uploadImageCallBack = async function(files) {
     return new Promise(async (resolve, reject) => {
@@ -92,8 +94,7 @@ export default function NewsEditor(props) {
         return;
       }
       const compressedBlob = await compressImage(files);
-      const fileUrl = await uploadChunks(compressedBlob, files.name);
-      resolve({ data: { link: fileUrl } });
+      await uploadChunks(compressedBlob, files.name);
     });
   };
   return (
