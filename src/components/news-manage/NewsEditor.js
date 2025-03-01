@@ -19,15 +19,10 @@ export default function NewsEditor(props) {
         );
         const editorState = EditorState.createWithContent(contentState);
         setEditorState(editorState);
-        console.log(contentState);
       }
     },
     [props.content]
   );
-  const onContentStateChange = content => {
-    // contentState = content
-    console.log(content);
-  };
   const compressImage = files => {
     return new Promise((resolve, reject) => {
       const fr = new FileReader();
@@ -97,7 +92,6 @@ export default function NewsEditor(props) {
       wrapperClassName="wrapperClassName"
       editorClassName="editorClassName"
       onEditorStateChange={editorState => setEditorState(editorState)}
-      onContentStateChange={onContentStateChange}
       onBlur={() => {
         props.getContent(
           draftToHtml(convertToRaw(editorState.getCurrentContent()))
