@@ -86,7 +86,8 @@ export default function NewsEditor(props) {
         return;
       }
       const compressedBlob = await compressImage(files);
-      await uploadChunks(compressedBlob, files.name);
+      const fileUrl = await uploadChunks(compressedBlob, files.name);
+      resolve({ data: { link: fileUrl } });
     });
   };
   return (
