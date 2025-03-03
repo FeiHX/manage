@@ -1,24 +1,13 @@
-import React, { useState } from "react";
-import { Form, Button, Input, message, notification } from "antd";
+import React from "react";
+import { Form, Button, Input, notification } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import "./login.css";
-// import JSEncrypt from 'jsencrypt';
 import withRoute from "../../components/sandbox/withRoute.js";
 import { connect } from "react-redux";
 import md5 from "js-md5";
 function LoginForm(props) {
-  const socket = new WebSocket("wss://my-manage.cn/websocket");
-  // 监听WebSocket消息
-  // var encryptor = new JSEncrypt();
-  socket.addEventListener("message", event => {
-    const news = event.data;
-    // encryptor.setPublicKey(pubKey)
-    console.log(news);
-  });
   const onFinish = value => {
     let newValue = {
-      // 'username':encryptor.encrypt(value.username),
-      // 'password':encryptor.encrypt(value.password)
       username: value.username,
       password: md5(value.password)
     };

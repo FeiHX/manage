@@ -1,3 +1,6 @@
+/**
+ * @jest-environment jsdom
+ */
 import React from "react";
 import Home from "../sandbox/home/Home";
 import userEvent from "@testing-library/user-event";

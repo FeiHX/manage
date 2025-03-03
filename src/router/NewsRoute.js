@@ -1,16 +1,13 @@
-import React from 'react'
-import { useRoutes } from 'react-router-dom'
-import News from '../views/news/News'
+import React from "react";
+import { useRoutes } from "react-router-dom";
+import News from "../views/news/News";
 
 export default function NewsRoute() {
-    const element = useRoutes([
-        {
-            path:'/news',
-            element:<News></News>  
-        }
-      ]
-    )
-    return (
-      element
-    )
+  const element = useRoutes([
+    {
+      path: "/news",
+      element: <News />
+    }
+  ]);
+  return element;
 }

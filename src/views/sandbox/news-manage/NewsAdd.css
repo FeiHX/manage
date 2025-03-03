@@ -11,7 +11,8 @@
   background: #67c23a;
   transition: width .3s;
 }
- .rc-select { /*替换rc-select的原样式*/
+.rc-select {
+  /*替换rc-select的原样式*/
   font-size: 14px;
   position: relative;
   background-color: #fff;
@@ -23,11 +24,13 @@
   height: 32px;
   padding: 0 2px;
 }
-.rc-select-single:not(.rc-select-customize-input) .rc-select-selector { /*替换rc-select的原样式*/
+.rc-select-single:not(.rc-select-customize-input) .rc-select-selector {
+  /*替换rc-select的原样式*/
   padding: 0px;
   border: 0px solid #000;
 }
-.rc-select-multiple .rc-select-selector { /*替换rc-select的原样式*/
+.rc-select-multiple .rc-select-selector {
+  /*替换rc-select的原样式*/
   display: flex;
   padding: 0px;
   border: 0px solid #000;

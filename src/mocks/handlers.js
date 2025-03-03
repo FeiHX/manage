@@ -37,36 +37,9 @@ export const handlers = [
     );
   }),
   rest.post("/api/users/adduser", async (req, res, ctx) => {
-    // const { username, password } = await req.json();
-
-    // if (username === 'admin' && password === '123456') {
-    //   return res(
-    //     ctx.status(200),
-    //     ctx.json({ token: 'fake-jwt-token' })
-    //   );
-    // } else {
-    //   return res(
-    //     ctx.status(401),
-    //     ctx.json({ message: 'Invalid credentials' })
-    //   );
-    // }
     return res(ctx.status(200), ctx.json("用户添加成功"));
   }),
   rest.put("/api/users?id=11", async (req, res, ctx) => {
-    // const { username, password } = await req.json();
-
-    // if (username === 'admin' && password === '123456') {
-    //   return res(
-    //     ctx.status(200),
-    //     ctx.json({ token: 'fake-jwt-token' })
-    //   );
-    // } else {
-    //   return res(
-    //     ctx.status(401),
-    //     ctx.json({ message: 'Invalid credentials' })
-    //   );/api/users?id=${current}
-    // }
-
     return res(ctx.status(200), ctx.json("修改成功"));
   }),
   rest.get("/api/news/preview?id=140", async (req, res, ctx) => {
@@ -241,41 +214,24 @@ export const handlers = [
   rest.patch("/api/news/update/publish?id=198", async (req, res, ctx) => {
     return res(ctx.status(200), ctx.json([]));
   }),
-//
+  //
   rest.post("/api/news", async (req, res, ctx) => {
     return res(ctx.status(200), ctx.json([]));
   }),
   rest.post("/api/users", async (req, res, ctx) => {
-    const { username, password } =  req.body;
-    if (username === 'admin' && password === 'adminpassword') {
-      return res(
-        ctx.status(200),
-        ctx.json('')
-      );
-    }else if (username === 'bannedAdmin' && password === 'password') {
-      return res(
-        ctx.status(401),
-        ctx.json('账号被封禁，请联系管理员！')
-      );
-    } 
-    else {
-      return res(
-        ctx.status(400),
-      // ctx.json({
-      //   message: '用户名或密码错误', // 自定义错误信息
-      //   code: 'INVALID_CREDENTIALS' // 可选错误码
-      // })
-      ctx.json('用户名或密码错误！')
-      );
-      // return res.status(404).json({ message: 'User not found' });
-
+    const { username, password } = req.body;
+    if (username === "admin" && password === "adminpassword") {
+      return res(ctx.status(200), ctx.json(""));
+    } else if (username === "bannedAdmin" && password === "password") {
+      return res(ctx.status(401), ctx.json("账号被封禁，请联系管理员！"));
+    } else {
+      return res(ctx.status(400), ctx.json("用户名或密码错误！"));
     }
-    
   }),
   rest.patch("/api/news/update/upload?id=144", async (req, res, ctx) => {
     return res(ctx.status(200), ctx.json([]));
   }),
   rest.patch("/api/news/preview/star?id=140", async (req, res, ctx) => {
     return res(ctx.status(200), ctx.json([]));
-  }),
+  })
 ];

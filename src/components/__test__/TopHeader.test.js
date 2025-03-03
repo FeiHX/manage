@@ -1,7 +1,7 @@
 import React from "react";
 import TopHeader from "../sandbox/TopHeader";
 import userEvent from "@testing-library/user-event";
-import { screen, render, waitFor, fireEvent } from "@testing-library/react";
+import { screen, render, waitFor } from "@testing-library/react";
 import { Provider } from "react-redux";
 import { MemoryRouter } from "react-router-dom";
 import { mockstore } from "../../test/mockStore";
@@ -20,20 +20,9 @@ describe("TopHeader Test", () => {
     await waitFor(() => {
       expect(welcome).toBeInTheDocument()
     },3000);
-    // const userInfo = await screen.findByPlaceholderText("userInfo");
-    // expect(userInfo).toBeInTheDocument();
-    // const home1 = await screen.findByText(/用户/); 
-    // await fireEvent.click(home1)
-    // const logout = await screen.findByText(/超级管理员/);
-    // expect(logout).toBeInTheDocument();
-    // fireEvent.click(logout)
-    // await waitFor(() => {
-
-    // },{ timeout: 15000 });
-    //fireEvent.focus(input);
   });
-  test("should show correct num when render", async () => {
-    const noticeCount = await screen.getByText(/9/); 
+  test("should show correct noticeNum when render", async () => {
+    const noticeCount = screen.getByText(/9/); 
     expect(noticeCount).toBeInTheDocument()
   });
   test("should render notice after clicking button", async () => {

@@ -1,9 +1,6 @@
-import React, { useEffect, useState, useRef, useMemo } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Card, Col, Row, List, Avatar, Button, Drawer } from "antd";
-import {
-  EditOutlined,
-  BarChartOutlined,
-} from "@ant-design/icons";
+import { EditOutlined, BarChartOutlined } from "@ant-design/icons";
 import axios from "axios";
 import withRoute from "../../../components/sandbox/withRoute.js";
 import { connect } from "react-redux";
@@ -24,9 +21,6 @@ function Home(props) {
   const [barData, setBarData] = useState();
   useEffect(() => {
     getViewStartData();
-    // return () => {
-    //     window.onresize = null;
-    // }
   }, []);
   const getViewStartData = () => {
     axios
@@ -42,7 +36,6 @@ function Home(props) {
         setStarList(
           res[1].data.sort((a, b) => b["star"] - a["star"]).slice(0, 5)
         );
-        // renderBar(groupBy(res[1].data,item=>item.categoryId),res[0].data)
         setBarData(groupBy(res[1].data, item => item.categoryId), res[0].data);
         setAllList(res[1].data);
       });
@@ -74,9 +67,6 @@ function Home(props) {
       ]
     };
     myChart.setOption(option);
-    // window.onresize = () => {
-    //     myChart.resize()
-    // }
   };
   const renderPie = () => {
     // 数据处理
@@ -126,9 +116,6 @@ function Home(props) {
       ]
     };
     option && myChart.setOption(option);
-    // window.onresize = () => {
-    //     myChart.resize()
-    // }
   };
   return (
     <div>
@@ -216,7 +203,6 @@ function Home(props) {
             </Card>
           </Col>
         </Row>
-        {/* <div ref={barRef} style={{height:'400px',marginTop:'30px'}}></div> */}
         <Drawer
           width="50%"
           title="个人新闻分类"

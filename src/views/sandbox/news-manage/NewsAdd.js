@@ -30,10 +30,10 @@ function NewsAdd(props) {
     } else {
       if (content.replace(/\s+/g, "") == "<p></p>") {
         message.error("新闻内容不能为空");
-      }else if(content === "请输入新闻内容！！！" ){
+      } else if (content === "请输入新闻内容！！！") {
         message.error("注意!新闻内容为初始！！请输入新闻内容！！！");
         setCurrent(current + 1);
-      }else {
+      } else {
         setCurrent(current + 1);
       }
     }
@@ -146,39 +146,40 @@ function NewsAdd(props) {
           </Form>
         </div>
       </div>
-      <div className={current === 1 ? "" : "hidden"} placeholder="react-draft-wysiwyg">
-          <NewsEditor className={current === 1 ? "" : "hidden"}
-            content={content}
-            getContent={value => {
-              setContent(value);
-            }}
-          />
+      <div
+        className={current === 1 ? "" : "hidden"}
+        placeholder="react-draft-wysiwyg"
+      >
+        <NewsEditor
+          className={current === 1 ? "" : "hidden"}
+          content={content}
+          getContent={value => {
+            setContent(value);
+          }}
+        />
       </div>
       <div style={{ marginTop: "50px" }}>
         {current == 2 &&
           <span>
-             <Button
-                placeholder="saveDraft"
-                type="primary"
-                onClick={() => handleSave(0)}
-              >
-                保存草稿箱
-              </Button>
-              <Button danger placeholder="submit" onClick={() => handleSave(1)}>
-                提交审核
-              </Button> 
-          </span>
-          }
+            <Button
+              placeholder="saveDraft"
+              type="primary"
+              onClick={() => handleSave(0)}
+            >
+              保存草稿箱
+            </Button>
+            <Button danger placeholder="submit" onClick={() => handleSave(1)}>
+              提交审核
+            </Button>
+          </span>}
         {current < 2 &&
           <Button placeholder="nextStep" type="primary" onClick={handlerNext}>
             下一步
-          </Button>
-          }
+          </Button>}
         {current > 0 &&
-            <Button placeholder="preStep" onClick={handlerPrevious}>
-              上一步
-            </Button>  
-}
+          <Button placeholder="preStep" onClick={handlerPrevious}>
+            上一步
+          </Button>}
       </div>
     </div>
   );

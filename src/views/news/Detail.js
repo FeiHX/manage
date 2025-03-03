@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, message } from "antd";
+import { Button } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import axios from "axios";
 import "./Detail.css";
@@ -35,7 +35,7 @@ function Detail(props) {
     });
     axios.patch(`/api/news/preview/star?id=${props.history.param.id}`, {
       star: newInfo.star + 1
-    })
+    });
   };
   return (
     <div
@@ -48,9 +48,16 @@ function Detail(props) {
               style={{ border: "none" }}
               icon={<ArrowLeftOutlined style={{ width: 60, height: 60 }} />}
               onClick={() => window.history.back()}
-            />{newInfo.title}
-            <span className="subhead">{newInfo.subheading}</span>
-            <HeartTwoTone data-testid="heart-icon" twoToneColor="#eb2f96" onClick={() => handleStar()} />
+            />
+            {newInfo.title}
+            <span className="subhead">
+              {newInfo.subheading}
+            </span>
+            <HeartTwoTone
+              data-testid="heart-icon"
+              twoToneColor="#eb2f96"
+              onClick={() => handleStar()}
+            />
           </div>
           <ul>
             <li>
