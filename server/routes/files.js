@@ -55,7 +55,7 @@ router.post("/files", async (req, res) => {
 });
 router.post("/merge", async (req, res) => {
   const { filename, uuid, totalChunks } = req.body;
-  console.log('filename, uuid, totalChunks:',[filename, uuid, totalChunks])
+  console.log("filename, uuid, totalChunks:", [filename, uuid, totalChunks]);
   const tempDir = path.join(parentDir1, `${filename}_${uuid}`);
   const targetPath = path.join(parentDir1, filename);
   try {

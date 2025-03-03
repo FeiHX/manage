@@ -1,4 +1,4 @@
 module.exports = {
-    jwtSecret:"jsonwebtoken11",
-    expiresIn: 24*60*60
-}
+  jwtSecret: "jsonwebtoken11",
+  expiresIn: 24 * 60 * 60
+};

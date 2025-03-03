@@ -2,7 +2,6 @@
   "name": "newssystem",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://8.138.11.111/",
   "dependencies": {
     "@babel/core": "^7.23.2",
     "@babel/plugin-transform-runtime": "^7.24.7",
@@ -99,8 +98,7 @@
     "dev": "cross-env NODE_ENV=development webpack serve --config ./config/webpack.config.js",
     "build": "cross-env NODE_ENV=production webpack --config ./config/webpack.config.js",
     "jest": "jest --watchAll --coverage --silent --verbose --cache",
-    "jest:test": "jest --silent --verbose --findRelatedTests ./src/views/__test__/UserList.test.js"
-
+    "jest:test": "jest --silent --verbose --findRelatedTests ./src/components/__test__/NewsEditor.test.js"
   },
   "eslintConfig": {
     "extends": [
@@ -142,9 +140,6 @@
     "workerDirectory": "public"
   },
   "overrides": {
-    "nwsapi": "2.2.13",
-    "enzyme": {
-      "cheerio": "1.0.0-rc.12"
-    }
+    "nwsapi": "2.2.13"
   }
 }
