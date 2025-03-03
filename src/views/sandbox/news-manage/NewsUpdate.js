@@ -64,19 +64,21 @@ function NewsUpdate(props) {
       content: content,
       auditState: auditState // 0-草稿箱、1-待审核、2-已审核、3-驳回
     }).then(res => {
-      const ws = new WebSocket(
-        "wss://my-manage.cn/websocket/notice?type=submit"
-      );
-      ws.onopen = function() {
-        ws.send(
-          JSON.stringify({
-            type: "submit",
-            send: props.username,
-            recieve: props.region,
-            content: `待审核:用户${props.username}提交新闻《${formInfo.title}》`
-          })
-        );
-      };
+      if(auditState) {
+        const ws = new WebSocket(
+            "wss://my-manage.cn/websocket/notice?type=submit"
+          );
+          ws.onopen = function() {
+            ws.send(
+              JSON.stringify({
+                type: "submit",
+                send: props.username,
+                recieve: props.region,
+                content: `待审核:用户${props.username}提交新闻《${formInfo.title}》`
+              })
+            );
+          };
+      }
       props.history.push(
         auditState === 0 ? "/news-manage/draft" : "/audit-manage/list"
       );

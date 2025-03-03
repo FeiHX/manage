@@ -56,20 +56,22 @@ function NewsAdd(props) {
       view: 0,
       publishTime: 0
     }).then(res => {
-      const ws = new WebSocket(
-        `wss://my-manage.cn/websocket/notice?type=submit&&user=${props.username}`
-      );
-      ws.onopen = function() {
-        ws.send(
-          JSON.stringify({
-            type: "submit",
-            time: Date.now(),
-            send: props.username,
-            recieve: props.region,
-            content: `待审核:用户${props.username}提交新闻《${formInfo.title}》`
-          })
+      if(auditState) {
+        const ws = new WebSocket(
+          `wss://my-manage.cn/websocket/notice?type=submit&&user=${props.username}`
         );
-      };
+        ws.onopen = function() {
+          ws.send(
+            JSON.stringify({
+              type: "submit",
+              time: Date.now(),
+              send: props.username,
+              recieve: props.region,
+              content: `待审核:用户${props.username}提交新闻《${formInfo.title}》`
+            })
+          );
+        };
+      }
       props.history.push(
         auditState === 0 ? "/news-manage/draft" : "/audit-manage/list"
       );

@@ -96,6 +96,20 @@ function NewsDraft(props) {
     Axios.patch(`/api/news/update/upload?id=${id}`, {
       auditState: 1
     }).then(res => {
+      const ws = new WebSocket(
+        `wss://my-manage.cn/websocket/notice?type=submit&&user=${props.username}`
+        );
+        ws.onopen = function() {
+          ws.send(
+            JSON.stringify({
+              type: "submit",
+              time: Date.now(),
+              send: props.username,
+              recieve: props.region,
+              content: `待审核:用户${props.username}提交新闻《${formInfo.title}》`
+            })
+          );
+        };
       props.history.push("/audit-manage/list");
       notification.info({
         message: "提交成功",
@@ -133,7 +147,7 @@ function NewsDraft(props) {
   );
 }
 const mapStateToProps = ({
-  CurrentUserReducer: { username },
+  CurrentUserReducer: { region, username },
   CategoriesReducer: { categories }
 }) => {
   return {
