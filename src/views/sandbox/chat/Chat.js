@@ -135,7 +135,7 @@ const Chat = props => {
           trigger={null}
           collapsible
           collapsed={false}
-          style={{ backgroundColor: "white" }}
+          style={{ backgroundColor: "white", height: "150%"}}
         >
           <div
             style={{ display: "flex", height: "100%", flexDirection: "column" }}
