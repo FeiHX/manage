@@ -85,7 +85,7 @@ function LoginForm(props) {
                   登录
                 </Button>
               </span>
-              <span style={{ color: "white" }}>- -账号: admin 密码: 1- -</span>
+              <span style={{ color: "white" }}>- -账号: admin / 1 密码: 1- -</span>
               <span style={{ float: "right" }}>
                 <Button
                   onClick={() => {

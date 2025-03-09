@@ -3,10 +3,16 @@ import { Layout, Menu, Form, Button, Input } from "antd";
 import { connect } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
 import "./chat.css";
+import { parse, stringify } from 'flatted';
+import styled from 'styled-components';
+import NewsEditor from "../../../components/news-manage/NewsEditor";
+const MyNewsEditor = styled(NewsEditor)``;
+
 const { Header, Content, Sider } = Layout;
 const { TextArea } = Input;
 
 const Chat = props => {
+  const [content,setContent] = useState('');
   const [selectKeys, setSelectKeys] = useState(0);
   const [userList, setuserList] = useState([]);
   const scrollContainerRef = useRef(null);
@@ -76,45 +82,49 @@ const Chat = props => {
       );
     });
   };
-  const myref = useRef();
-  const onFinish = ({ message }) => {
-    console.log(message, recieve);
+  const onFinish = () => {
     if (recieve == "") {
       alert("请选择一个用户来发送信息");
       return;
-    }
-    setMessages([
-      ...messages,
-      {
-        key: new Date().toLocaleTimeString(),
-        send: props.username,
-        recieve: recieve,
-        message: message
-      }
-    ]);
-    myref?.current.resetFields();
-    const ws = new WebSocket(
-      `wss://my-manage.cn/websocket/chat?type=chat&&send=${props.username}&&recieve=${recieve}`
-    );
-    ws.onopen = function() {
-      ws.send(
-        JSON.stringify({
+    }else if(content == "" || content.replace(/\s+/g, "") == "<p></p>") {
+      alert('请输入消息')
+      return
+    } else {
+      setMessages([
+        ...messages,
+        {
           key: new Date().toLocaleTimeString(),
           send: props.username,
           recieve: recieve,
-          message: message
-        })
+          message: content
+        }
+      ]);
+      const ws = new WebSocket(
+        `wss://my-manage.cn/websocket/chat?type=chat&&send=${props.username}&&recieve=${recieve}`
       );
-    };
-    ws.onmessage = function(msg) {
-      if (msg.data.indexOf("type") == -1) {
-        setMessages(
-          msg.data.split(",,").map(item => {
-            return JSON.parse(item);
+      ws.onopen = function() {
+        ws.send(
+          stringify({
+            key: new Date().toLocaleTimeString(),
+            send: props.username,
+            recieve: recieve,
+            message: content
           })
         );
-      }
-    };
+      };
+      ws.onmessage = function(msg) {
+        if (msg.data.indexOf("type") == -1) {
+          setMessages(
+            msg.data.split(",,").map(item => {
+              return parse(item);
+            })
+          );
+        }
+      };
+    }
+    
+   
+    
   };
   const select = useRef([]);
   return (
@@ -155,14 +165,13 @@ const Chat = props => {
                       message.send == props.username ? "selfMessage" : ""
                     }
                   >
-                    <div
+                    <div 
                       className={
                         message.send == props.username
-                          ? "selfMessageContent"
-                          : "messageContent"
-                      }
-                    >
-                      {message.message}
+                        ? 'selfMessageContent'
+                        : 'messageContent'
+                      } 
+                      dangerouslySetInnerHTML={{ __html: message.message }}>
                     </div>
                     <div className="messageTime">
                       {message.key}--{message.send}
@@ -173,26 +182,18 @@ const Chat = props => {
             </div>
             <div>
               <div className="chat-input-box">
-                <Form ref={myref} onFinish={onFinish} name="normal_login">
-                  <Form.Item
-                    name="message"
-                    rules={[
-                      { required: true, message: "Please input your Message!" }
-                    ]}
-                  >
-                    <TextArea
-                      placeholder="请输入聊天内容"
-                      autoSize={{ minRows: 3, maxRows: 5 }}
-                    />
-                  </Form.Item>
-                  <Button
-                    type="primary"
-                    htmlType="submit"
-                    className="login-form-button"
-                  >
-                    发送
-                  </Button>
-                </Form>
+                <MyNewsEditor content={content} getContent={(value)=>{setContent(value)}} options={["image", "emoji"]}> 
+                  {(clearEditor) => (
+                    <button
+                      className="submit-button"
+                      onClick={() => {
+                        onFinish();
+                        clearEditor();
+                      }}
+                    >       
+                      发送
+                    </button>)}
+                </MyNewsEditor>
               </div>
             </div>
           </div>
@@ -221,336 +222,3 @@ const mapDispatchToProps = {
   }
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Chat);
-
-```
-
-│  
-│  babel.config.js
-│  jest.config.js
-│  package-lock.json
-│  package.json
-│  README.md
-│  
-├─config
-│  │  webpack.config.js
-│  │  
-│  └─jest
-│          cssTransform.js
-│          fileTransform.js
-│          
-├─public
-│      favicon.ico
-│      index.html
-│      logo192.png
-│      logo512.png
-│      manifest.json
-│      mockServiceWorker.js
-│      robots.txt
-│      
-├─server
-│          
-└─src
-    │  .babelrc
-    │  App.css
-    │  App.js
-    │  babel.config.js
-    │  index.css
-    │  index.js
-    │  logo.svg
-    │  setupTests.js
-    │  
-    ├─components
-    │  ├─news-manage
-    │  │      NewsEditor.js
-    │  │      
-    │  ├─publish-manage
-    │  │      NewsPublish.js
-    │  │      usePublish.js
-    │  │      
-    │  ├─sandbox
-    │  │      index.css
-    │  │      SideMenu.js
-    │  │      TopHeader.js
-    │  │      withRoute.js
-    │  │      
-    │  ├─user-manage
-    │  │      UserForm.js
-    │  │      
-    │  └─__test__
-    │          NewsEditor.test.js
-    │          NewsPublish.test.js
-    │          SideMenu.test.js
-    │          TopHeader.test.js
-    │          
-    ├─image
-    │      JiqGstEfoWAOHiTxclqi.png
-    │      QasfAllzWOlzRzlqooai.jpg
-    │      
-    ├─mocks
-    │      handlers.js
-    │      server.js
-    │      
-    ├─redux
-    │  │  store.js
-    │  │  
-    │  └─reducers
-    │          CategoriesReducer.js
-    │          ChatMessageReducer.js
-    │          CollapsedReducer.js
-    │          CurrentUserReducer.js
-    │          NoticeListReducer.js
-    │          RightListReducer.js
-    │          RoleListReducer.js
-    │          
-    ├─router
-    │  │  DetailRoute.js
-    │  │  IndexRouter.js
-    │  │  LoginRoute.js
-    │  │  NewsRoute.js
-    │  │  Redirect.js
-    │  │  
-    │  └─__test__
-    │          IndexRouter.test.js
-    │          
-    ├─test
-    │      mockStore.js
-    │      
-    ├─utils
-    │      data.js
-    │      echarts.js
-    │      myAxios.js
-    │      
-    ├─views
-    │  ├─login
-    │  │      login.css
-    │  │      Login.js
-    │  │      LoginForm.js
-    │  │      
-    │  ├─news
-    │  │      Detail.css
-    │  │      Detail.js
-    │  │      News.css
-    │  │      News.js
-    │  │      
-    │  ├─sandbox
-    │  │  │  NewsSandBox.css
-    │  │  │  NewsSandBox.js
-    │  │  │  
-    │  │  ├─audit-manage
-    │  │  │      Audit.js
-    │  │  │      AuditList.js
-    │  │  │      
-    │  │  ├─chat
-    │  │  │      chat.css
-    │  │  │      Chat.js
-    │  │  │      
-    │  │  ├─home
-    │  │  │      home.css
-    │  │  │      Home.js
-    │  │  │      
-    │  │  ├─news-manage
-    │  │  │      NewsAdd.css
-    │  │  │      NewsAdd.js
-    │  │  │      NewsCategory.js
-    │  │  │      NewsDraft.js
-    │  │  │      NewsPreview.css
-    │  │  │      NewsPreview.js
-    │  │  │      NewsUpdate.js
-    │  │  │      
-    │  │  ├─nopermission
-    │  │  │      NoPermission.css
-    │  │  │      NoPermission.js
-    │  │  │      
-    │  │  ├─publish-manage
-    │  │  │      Publish.js
-    │  │  │      Sunset.js
-    │  │  │      Unpublish.js
-    │  │  │      
-    │  │  ├─right-manage
-    │  │  │      RightList.js
-    │  │  │      RoleList.js
-    │  │  │      
-    │  │  └─use-manage
-    │  │          UserList.js
-    │  │          
-    │  └─__test__
-    │      │  Audit.test.js
-    │      │  AuditList.test.js
-    │      │  Detail.test.js
-    │      │  Home.test.js
-    │      │  LoginForm.test.js
-    │      │  News.test.js
-    │      │  NewsAdd.test.js
-    │      │  NoPermission.test.js
-    │      │  UserList.test.js
-    │      │  
-    │      └─__snapshots__
-    │              NoPermission.test.js.snap
-    │              
-    └─__mocks__
-            echarts.js
-            styleMock.js
-            
-```
-
-
-客户端目录
-
-```
-
-│  babel.config.js
-│  package.json
-│  
-├─config
-│      webpack.config.js
-│      
-└─src
-    │  App.js
-    │  index.css
-    │  index.js
-    │  logo.svg
-    │  
-    ├─components
-    │  ├─news-manage
-    │  │      NewsEditor.js
-    │  │      
-    │  ├─publish-manage
-    │  │      NewsPublish.js
-    │  │      usePublish.js
-    │  │      
-    │  ├─sandbox
-    │  │      index.css
-    │  │      SideMenu.js
-    │  │      TopHeader.js
-    │  │      withRoute.js
-    │  │      
-    │  ├─user-manage
-    │  │      UserForm.js
-    │  │      
-    │  └─__test__
-    │          NewsEditor.test.js
-    │          NewsPublish.test.js
-    │          SideMenu.test.js
-    │          TopHeader.test.js
-    │          
-    ├─image
-    │      JiqGstEfoWAOHiTxclqi.png
-    │      QasfAllzWOlzRzlqooai.jpg
-    │      
-    ├─mocks
-    │      handlers.js
-    │      server.js
-    │            
-    ├─redux
-    │  │  store.js
-    │  │  
-    │  └─reducers
-    │          CategoriesReducer.js
-    │          ChatMessageReducer.js
-    │          CollapsedReducer.js
-    │          CurrentUserReducer.js
-    │          NoticeListReducer.js
-    │          RightListReducer.js
-    │          RoleListReducer.js
-    │          
-    │          
-    ├─router
-    │  │  DetailRoute.js
-    │  │  IndexRouter.js
-    │  │  LoginRoute.js
-    │  │  NewsRoute.js
-    │  │  Redirect.js
-    │  │  
-    │  └─__test__
-    │          IndexRouter.test.js
-    │
-    ├─test
-    │      mockStore.js
-    │     
-    ├─utils
-    │      data.js
-    │      echarts.js 
-    │      myAxios.js
-    │      
-    └─views
-        ├─login
-        │      login.css
-        │      Login.js
-        │      LoginForm.js
-        │      
-        ├─news
-        │      Detail.css
-        │      Detail.js
-        │      News.css
-        │      News.js
-        │      
-        └─sandbox
-            │  NewsSandBox.css
-            │  NewsSandBox.js
-            │  
-            ├─audit-manage
-            │      Audit.js
-            │      AuditList.js
-            │      
-            ├─chat
-            │      chat.css
-            │      Chat.js
-            │            │      
-            ├─home
-            │      home.css
-            │      Home.js
-            │      
-            ├─news-manage
-            │      NewsAdd.css
-            │      NewsAdd.js
-            │      NewsCategory.js
-            │      NewsDraft.js
-            │      NewsPreview.css
-            │      NewsPreview.js
-            │      NewsUpdate.js
-            │      
-            ├─nopermission
-            │      Nopermission.css
-            │      NoPermission.js
-            │      
-            ├─publish-manage
-            │      Publish.js
-            │      Sunset.js
-            │      Unpublish.js
-            │      
-            ├─right-manage
-            │      RightList.js
-            │      RoleList.js
-            │      
-            └─use-manage
-                    UserList.js
-
-```
-
-
-
-服务器server目录
-
-
-```
-│  index.js
-│  nodemon.json
-│  package.json
-│  
-├─middlewares
-│      auth.js
-│      cache.js
-│      
-├─mysql
-│      index.js
-│      
-│      
-└─routes
-        categoriesRouter
-        config.js
-        newsRouter.js
-        rightlistchildrenRouter.js
-        rightlistRouter.js
-        rolelistRouter.js
-        userRouter.js
-```

@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const expressWs = require("express-ws")(router);
 const sqlFn = require("../mysql");
-
+const { parse, stringify } = require('flatted');
 const wsMap = new Map();
 const wsMap2 = new Map();
 const private = (send, recieve) => {
@@ -71,13 +71,13 @@ router.ws("/websocket/chat", function(ws, req) {
           if (!data.length) {
             const sqlIncertMsg =
               "insert into privatemessage (`privateName`,`message`) values (?,?)";
-            const arrIncertMsg = [privateName, msg];
+            const arrIncertMsg = [privateName, parse(msg)];
             sqlFn(sqlIncertMsg, arrIncertMsg, function(data) {});
           } else {
             const sqlUpdateMsg =
               "update privatemessage set  `message`=?  where `privateName`=?";
             const arrUpdateMsg = [
-              JSON.parse(JSON.stringify(data))[0].message.concat(",," + msg),
+              parse(stringify(data))[0].message.concat(",," + JSON.stringify(parse(msg))),
               privateName
             ];
             sqlFn(sqlUpdateMsg, arrUpdateMsg, function(data) {});
@@ -85,10 +85,10 @@ router.ws("/websocket/chat", function(ws, req) {
           let sqlMsage = "select * from privatemessage where `privateName`=?";
           let arrMsage = [privateName];
           sqlFn(sqlMsage, arrMsage, function(data) {
-            wsMap.get(JSON.parse(msg).recieve) &&
+            wsMap.get(parse(msg).recieve) &&
               wsMap
-                .get(JSON.parse(msg).recieve)
-                .send(JSON.parse(JSON.stringify(data))[0].message);
+                .get(parse(msg).recieve)
+                .send(parse(stringify(data))[0].message);
           });
         });
       });

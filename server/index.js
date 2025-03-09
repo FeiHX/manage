@@ -10,7 +10,6 @@ const rightlist = require("./routes/rightlistRouter.js");
 const rightlistchildren = require("./routes/rightlistchildrenRouter.js");
 const news = require("./routes/newsRouter.js");
 const categories = require("./routes/categoriesRouter.js");
-const authtoken = require("./routes/authTokenRouter.js");
 const files = require("./routes/files.js");
 const message = require("./routes/messageRouter.js");
 const expressWs = require("express-ws")(app);
@@ -24,7 +23,6 @@ app.use(rightlist);
 app.use(rightlistchildren);
 app.use(news);
 app.use(categories);
-app.use(authtoken);
 app.use(files);
 
 app.listen(3030, (req, res) => {

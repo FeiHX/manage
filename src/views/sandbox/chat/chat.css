@@ -1,22 +1,41 @@
 .chatWindow {
   display: flex;
   flex-direction: column;
-  height: 100%;
-  background-color: #e7ecf0;
+  height: 150%;
+  background-color: #E7ECF0;
+}
+.chatWindow > :first-child {
+  flex-shrink: 0; 
+}
+
+/* 第二个子元素允许伸缩并占据剩余空间 */
+.chatWindow > :nth-child(2) {
+  /* flex: 1;         
+  overflow-y: auto; 
+  scrollbar-width: none;  */
+  position: relative;  /* 关键：为子元素绝对定位提供锚点 */
+  flex: 1;
+  overflow-y: auto;
+
 }
 .messageList {
   flex: 1;
   overflow-y: auto;
   padding: 40px;
 }
+
 .selfMessage {
   text-align: right;
+  /* justify-content: flex-start; */
   margin-bottom: 40px;
+  
 }
+
 .selfMessageContent {
   display: inline-block;
   padding: 18px;
-  background-color: #95ec69;
+  /* background-color: #fff; */
+  background-color: #95EC69;
   border-radius: 15px;
   font-size: 22px;
 }
@@ -24,22 +43,159 @@
   display: inline-block;
   padding: 18px;
   background-color: #fff;
+  /* background-color: #95EC69; */
   border-radius: 15px;
   font-size: 22px;
 }
+
 .messageTime {
   font-size: 12px;
   color: #999;
 }
+
 .chatInput {
   display: flex;
   padding: 10px;
   border-top: 1px solid #ccc;
 }
+
 .typingIndicator {
   font-size: 14px;
   color: #666;
 }
+
 .ant-menu-item-selected {
-  background-color: red;
+  background-color: red ;
 }
+
+/* 控制所有图片尺寸 */
+.messageContent img, 
+.selfMessageContent img {
+max-width: 100% !important;  /* 图片最大宽度不超过容器 */
+height: auto !important;     /* 高度自适应 */
+object-fit: contain;         /* 保持宽高比 */
+display: block;              /* 消除底部间隙 */
+margin: 5px 0;               /* 添加间距 */
+}
+
+.fixed-toolbar-wrapper {
+position: relative;
+height: 280px; /* 根据实际布局调整 */
+
+}
+.rdw-editor-toolbar {
+position: sticky;
+top: 0;
+background: white;
+z-index: 1000; /* 确保表头在滚动时覆盖内容 */
+}
+.scrollable-editor {
+max-height: 60px; /* 自定义高度阈值 */
+
+border: 1px solid #ddd; /* 可选边框 */
+}
+
+/* 默认隐藏滚动条 */
+.DraftEditor-root {
+height: 100%;
+overflow-y: auto;
+scrollbar-width: none; /* Firefox */
+}
+
+
+.public-DraftEditor-content {
+min-height: 80px; /* 最小编辑区域高度 */
+}
+
+
+/* 隐藏下拉箭头（可选） */
+.rdw-fontsize-dropdown .rdw-dropdown-carettoopen {
+display: none;
+}
+.rdw-fontsize-dropdown .rdw-dropdown-selectedtext {
+color: #333; /* 固定显示文字颜色 */
+}
+
+.fixed-font-editor .public-DraftStyleDefault-block {
+font-size: 22px !important;
+font-weight: 500;
+height: 100%;
+padding-bottom: 10px !important; /* 根据按钮高度调整 */
+
+}
+.submit-button {
+position: absolute;
+bottom: -30px;  /* 距离底部间距 */
+right: 20px;   /* 距离右侧间距 */
+z-index: 1000; /* 确保按钮悬浮在编辑器内容上方 */
+padding: 8px 16px;
+background: #1890ff;
+color: white;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+}
+
+/* 全局样式调整 */
+.DraftEditor-root .public-DraftStyleDefault-block {
+margin: 0;  /* 移除默认的外边距 */
+line-height: 1.5;  /* 调整行高 */
+}
+/* 调整上传弹窗整体尺寸 */
+.rdw-image-modal {
+width: 200px !important;  /* 修改宽度 */
+height: 130px !important; /* 修改高度 */
+padding: 0 0;
+font-size: 3px;
+}
+
+/* 调整上传区域内部容器大小 */
+.rdw-image-modal-upload-option {
+padding: 4px;
+min-height: 50px;
+}
+
+/* 弹窗整体布局调整为三栏 */
+.rdw-image-modal {
+width: 500px !important;   /* 总宽度增加以适应三栏 */
+min-height: 300px !important;
+display: grid !important;
+grid-template-columns: 1fr 1fr 1fr; /* 三栏等宽 */
+gap: 20px; /* 增加列间距 */
+}
+
+/* 左侧上传区域 */
+.rdw-image-modal-upload-option {
+padding: 10px;
+border-right: 1px solid #eee;
+grid-column: 1 / 2; /* 明确分配第一列 */
+}
+
+/* 中间输入区域 */
+.rdw-image-modal-url-section {
+padding: 10px;
+border-right: 1px solid #eee; /* 新增右边框分隔 */
+grid-column: 2 / 3; /* 分配第二列 */
+}
+
+/* 右侧预览区域（新增自定义类名）*/
+.rdw-image-modal-preview-section {
+padding: 10px;
+grid-column: 3 / 4; /* 分配第三列 */
+}
+
+/* 输入框专属调整 */
+.rdw-image-modal-input {
+margin: 15px 0;
+width: 100% !important;  /* 适当减小百分比 */
+max-width: 200px;       /* 增加最大宽度限制 */
+}
+
+/* 按钮组布局优化 */
+.rdw-image-modal-btn-section {
+grid-column: 1 / -1;    /* 跨所有列 */
+margin-top: 10px;
+border-top: 1px solid #eee;
+padding-top: 15px;
+}
+

@@ -9,6 +9,8 @@ import Select, { Option } from "rc-select";
 import "rc-select/assets/index.css";
 import "antd/dist/reset.css";
 import "./NewsAdd.css";
+import styled from 'styled-components';
+const MyNewsEditor = styled(NewsEditor)``
 
 function NewsAdd(props) {
   const NewsForm = useRef(null);
@@ -152,15 +154,14 @@ function NewsAdd(props) {
         className={current === 1 ? "" : "hidden"}
         placeholder="react-draft-wysiwyg"
       >
-        <NewsEditor
-          className={current === 1 ? "" : "hidden"}
+        <MyNewsEditor
           content={content}
           getContent={value => {
             setContent(value);
           }}
         />
       </div>
-      <div style={{ marginTop: "50px" }}>
+      <div style={{ marginTop: "80px" }}>
         {current == 2 &&
           <span>
             <Button
