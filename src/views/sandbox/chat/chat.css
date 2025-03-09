@@ -81,8 +81,7 @@ margin: 5px 0;               /* 添加间距 */
 .fixed-toolbar-wrapper {
 position: relative;
 height: 280px; /* 根据实际布局调整 */
-overflow-y: auto;
-scrollbar-width: none; 
+
 }
 .rdw-editor-toolbar {
 position: sticky;
@@ -99,8 +98,8 @@ border: 1px solid #ddd; /* 可选边框 */
 /* 默认隐藏滚动条 */
 .DraftEditor-root {
 height: 100%;
-overflow-y: auto;
-scrollbar-width: none; 
+/* overflow-y: auto;
+scrollbar-width: none;  */
 }
 
 
