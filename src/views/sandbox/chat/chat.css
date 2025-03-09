@@ -81,7 +81,8 @@ margin: 5px 0;               /* 添加间距 */
 .fixed-toolbar-wrapper {
 position: relative;
 height: 280px; /* 根据实际布局调整 */
-
+overflow-y: auto;
+scrollbar-width: none; 
 }
 .rdw-editor-toolbar {
 position: sticky;
@@ -99,7 +100,7 @@ border: 1px solid #ddd; /* 可选边框 */
 .DraftEditor-root {
 height: 100%;
 overflow-y: auto;
-scrollbar-width: none; /* Firefox */
+scrollbar-width: none; 
 }
 
 
@@ -121,7 +122,8 @@ font-size: 22px !important;
 font-weight: 500;
 height: 100%;
 padding-bottom: 10px !important; /* 根据按钮高度调整 */
-
+overflow-y: auto;
+scrollbar-width: none; 
 }
 .submit-button {
 position: absolute;
