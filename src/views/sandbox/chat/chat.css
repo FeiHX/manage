@@ -10,12 +10,12 @@
 
 /* 第二个子元素允许伸缩并占据剩余空间 */
 .chatWindow > :nth-child(2) {
-  /* flex: 1;         
+  flex: 1;         
   overflow-y: auto; 
-  scrollbar-width: none;  */
-  position: relative;  /* 关键：为子元素绝对定位提供锚点 */
+  scrollbar-width: none; 
+  /* position: relative;  
   flex: 1;
-  overflow-y: auto;
+  overflow-y: auto; */
 
 }
 .messageList {

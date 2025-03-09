@@ -143,7 +143,7 @@ export default function NewsEditor(props) {
       formData.append("totalChunks", totalChunks);
       formData.append("uuid", uuid);
       uploadPromises.push(
-        axios({
+        Axios({
           method: "post",
           url: "/api/files",
           headers: { "Content-Type": "multipart/form-data" },
@@ -152,7 +152,7 @@ export default function NewsEditor(props) {
       );
     }
     await Promise.all(uploadPromises);
-    const { data } = await axios.post("/api/merge", {
+    const { data } = await Axios.post("/api/merge", {
       filename: originalName,
       uuid,
       totalChunks
