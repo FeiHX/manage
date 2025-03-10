@@ -57,14 +57,14 @@ const Chat = props => {
     };
   }, []);
   const renderMenu = () => {
-    return userList?.filter(data => data.user != props.username).map(item => {
+    return userList?.filter(data => data.username != props.username).map(item => {
       return (
         <Menu.Item
-          key={item.user}
+          key={item.username}
           onClick={() => {
-            setrecieve(item.user);
+            setrecieve(item.username);
             const ws = new WebSocket(
-              `wss://my-manage.cn/websocket/chat?type=messagelist&&send=${props.username}&&recieve=${item.user}`
+              `wss://my-manage.cn/websocket/chat?type=messagelist&&send=${props.username}&&recieve=${item.username}`
             );
             ws.onmessage = function(msg) {
               if (msg.data.indexOf("type") == -1) {
@@ -77,7 +77,7 @@ const Chat = props => {
             };
           }}
         >
-          {item.user}
+          {item.username}
         </Menu.Item>
       );
     });

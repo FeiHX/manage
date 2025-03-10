@@ -71,7 +71,7 @@ router.ws("/websocket/chat", function(ws, req) {
           if (!data.length) {
             const sqlIncertMsg =
               "insert into privatemessage (`privateName`,`message`) values (?,?)";
-            const arrIncertMsg = [privateName, parse(msg)];
+            const arrIncertMsg = [privateName,JSON.stringify(parse(msg))]
             sqlFn(sqlIncertMsg, arrIncertMsg, function(data) {});
           } else {
             const sqlUpdateMsg =
@@ -94,7 +94,7 @@ router.ws("/websocket/chat", function(ws, req) {
       });
       break;
     case "userlist":
-      const sqlGetUser = "select * from userlist  ";
+      const sqlGetUser = "select * from user";
       sqlFn(sqlGetUser, [], function(data) {
         ws.send(JSON.stringify(data));
       });
