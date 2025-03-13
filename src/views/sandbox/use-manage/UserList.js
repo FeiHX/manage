@@ -9,6 +9,8 @@ import {
 } from "@ant-design/icons";
 import UserForm from "../../../components/user-manage/UserForm";
 import md5 from "js-md5";
+import{RasAes} from '../../../utils/crypto'
+import bcrypt from "bcryptjs";
 
 const { confirm } = Modal;
 
@@ -203,12 +205,18 @@ function UserList(props) {
       //重置表单
       addForm.current.resetFields();
       //post到后端，自动生成id，再设置datasource，方便后面的删除和更新
+      var pubKey =  `-----BEGIN PUBLIC KEY-----
+      MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAI4Sd1JVtIIrHDoMcknO6iva2+iAMPFo
+      Jx+dGrjlgvcYdyePwPJft1ZB4WkZb/vRHN8UKn123CV5B2XolmqrDv0CAwEAAQ==
+      -----END PUBLIC KEY-----`
+      const { encryptedAesKey, iv, ciphertext } = RasAes({'password':value.password},pubKey)
+
       Axios.post(`/api/users/adduser`, {
         ...value,
         roleState: 1,
         roleDefault: 0,
         role: roleObj[value.roleId],
-        password: md5(value.password)
+        encryptedAesKey, iv, encryptedData:ciphertext
       }).then(res => {
         if (res.data == "用户添加成功") {
           setdataSource([
@@ -236,16 +244,21 @@ function UserList(props) {
   };
   const updateFormOk = item => {
     updateForm.current.validateFields().then(value => {
+      var pubKey =  `-----BEGIN PUBLIC KEY-----
+      MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAI4Sd1JVtIIrHDoMcknO6iva2+iAMPFo
+      Jx+dGrjlgvcYdyePwPJft1ZB4WkZb/vRHN8UKn123CV5B2XolmqrDv0CAwEAAQ==
+      -----END PUBLIC KEY-----`
+      const { encryptedAesKey, iv, ciphertext } = RasAes({'password':value.password},pubKey)
       setisUpdateOpen(false);
       Axios.put(`/api/users?id=${current}`, {
         ...value,
-        password: md5(value.password)
+        encryptedAesKey, iv, encryptedData:ciphertext
       }).then(res => {
         if (res.data == "修改成功") {
           setdataSource(
             dataSource.map(item => {
               if (item.id === current) {
-                value.password = md5(value.password);
+                value.password = bcrypt.hashSync(value.password, 10)
                 return {
                   ...item,
                   ...value
