@@ -5,13 +5,17 @@ import "./login.css";
 import withRoute from "../../components/sandbox/withRoute.js";
 import { connect } from "react-redux";
 import md5 from "js-md5";
+import { RasAes } from '../../utils/crypto';
+
 function LoginForm(props) {
   const onFinish = value => {
     let newValue = {
       username: value.username,
       password: md5(value.password)
     };
-    props.loginActions(newValue, props.description).then(
+    const { encryptedAesKey, iv, ciphertext } = RasAes({'password':value.password},pubKey)
+
+    props.loginActions(value.username, props.description,{encryptedAesKey,iv,encryptedData: ciphertext}).then(
       r => {
         props.history.push("/home");
       },

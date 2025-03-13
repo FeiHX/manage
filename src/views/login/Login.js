@@ -19,9 +19,9 @@ function Login(props) {
   );
 }
 const mapDispatchToprops = {
-  loginActions(value, description) {
+  loginActions(username, description,encrypted) {
     return dispatch => {
-      return axios.post(`${description[0]}`, value).then(res => {
+      return axios.post(`${description[0]}`, {'username':username,...encrypted}).then(res => {
         const token = res.data.token;
         localStorage.setItem("jwToken", token);
         localStorage.setItem("expiresIn", res.data.expiresIn);
