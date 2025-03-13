@@ -13,6 +13,10 @@ function LoginForm(props) {
       username: value.username,
       password: md5(value.password)
     };
+    var pubKey =  `-----BEGIN PUBLIC KEY-----
+    MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAI4Sd1JVtIIrHDoMcknO6iva2+iAMPFo
+    Jx+dGrjlgvcYdyePwPJft1ZB4WkZb/vRHN8UKn123CV5B2XolmqrDv0CAwEAAQ==
+    -----END PUBLIC KEY-----`
     const { encryptedAesKey, iv, ciphertext } = RasAes({'password':value.password},pubKey)
 
     props.loginActions(value.username, props.description,{encryptedAesKey,iv,encryptedData: ciphertext}).then(
