@@ -1,14 +1,11 @@
 const NodeRSA = require("node-rsa");
 const crypto = require("crypto");
 
-const RsaAes = (privatePem,encryptedAesKey,encryptedData,iv) => {
-
+const RsaAes = (privatePem, encryptedAesKey, encryptedData, iv) => {
   var decrypt = new NodeRSA(privatePem, "pkcs8-private-pem");
   decrypt.setOptions({ encryptionScheme: "pkcs1" });
-
   // 1. RSA解密AES密钥
   const aesKey = decrypt.decrypt(encryptedAesKey, "utf8");
-  console.log("aesKey::", aesKey, encryptedData.length);
   // 2. AES解密数据
   const decipher = crypto.createDecipheriv(
     "aes-128-cbc",
@@ -18,9 +15,8 @@ const RsaAes = (privatePem,encryptedAesKey,encryptedData,iv) => {
   );
   let decrypted = decipher.update(encryptedData, "hex", "utf8");
   decrypted += decipher.final("utf8");
-  console.log("decrypted::", JSON.parse(decrypted));
   const { password } = JSON.parse(decrypted);
-  return {password}
+  return { password };
 };
 
-module.exports = {RsaAes}
+module.exports = { RsaAes };

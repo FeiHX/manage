@@ -68,7 +68,6 @@ function UserList(props) {
   useEffect(
     () => {
       Axios.get("/api/users").then(res => {
-        console.log(res);
         let list = [];
         res.data?.forEach(item => {
           let role = props.rolelist?.filter(

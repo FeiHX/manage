@@ -5,7 +5,6 @@ import JSEncrypt from "jsencrypt";
 export const rsaEncrypt = (data, publicKey) => {
   const encryptor = new JSEncrypt();
   encryptor.setPublicKey(publicKey);
-  console.log("encryptor.encrypt(data):::", encryptor.encrypt(data));
   return encryptor.encrypt(data);
 };
 
