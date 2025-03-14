@@ -8,8 +8,10 @@ import md5 from "js-md5";
 import { RasAes } from '../../utils/crypto';
 
 function LoginForm(props) {
+  useEffect()
   const ws2 = new WebSocket(`wss://my-manage.cn/websocket/pubKey`);
   ws2.onmessage = function(msg) {
+    console.log('msg:',msg.data)
     localStorage.setItem('pubKey',msg.data)
     ws2.close()
   } 

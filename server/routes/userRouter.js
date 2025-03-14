@@ -38,6 +38,7 @@ const priKey =
 "-----END PRIVATE KEY-----";
 
 router.ws('/pubKey',(ws,req )=> {
+  console.log('router.ws(/pubKey')
   ws.send(pubKey)
 })
 
