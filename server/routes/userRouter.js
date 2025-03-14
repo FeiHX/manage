@@ -36,9 +36,6 @@ const priKey =
 "Gm6b5y+O4wrCFqfT57hLQqHOz7PGOwIgPN0W26+BrhXIaazkCEf0/qz95cwHEdgl\n" +
 "Sc6Jev4DrBw=\n" +
 "-----END PRIVATE KEY-----";
-server.on("connection", socket => {
-  socket.send(pubKey);
-});
 
 router.ws('/pubKey',(ws,req )=> {
   ws.send(pubKey)
