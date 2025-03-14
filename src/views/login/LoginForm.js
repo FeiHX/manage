@@ -8,10 +8,24 @@ import md5 from "js-md5";
 import { RasAes } from '../../utils/crypto';
 
 function LoginForm(props) {
+  const ws2 = new WebSocket(`wss://my-manage.cn/websocket/users/pubKey`);
+  ws2.onmessage = function(msg) {
+    localStorage.setItem('pubKey',msg.data)
+    ws2.close()
+  } 
   const onFinish = value => {
     let newValue = {
       username: value.username,
       password: md5(value.password)
+    };
+    const ws1 = new WebSocket(`wss://my-manage.cn/websocket/notice?type=list`);
+    ws1.onmessage = function(msg) {
+      let list = JSON.parse(msg.data).map(item => {
+        item.message = JSON.parse(item.message);
+        return item;
+      });
+      list.reverse();
+      props.changeNoticeList(list, ws);
     };
     var pubKey =  `-----BEGIN PUBLIC KEY-----
     MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAI4Sd1JVtIIrHDoMcknO6iva2+iAMPFo

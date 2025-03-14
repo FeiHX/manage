@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const expressWs = require("express-ws")(router);
+
 const sqlFn = require("../mysql");
 const jwt = require("jsonwebtoken");
 const { jwtSecret, expiresIn } = require("./config");
@@ -11,6 +13,36 @@ const bcrypt = require("bcryptjs");
 const { RsaAes } = require("../utils/RsaAes");
 const authMiddleware = require("../middlewares/auth");
 router.use(authMiddleware);
+
+//1.创建RSA对象，并指定 秘钥长度
+var key = new NodeRSA({ b: 512 });
+key.setOptions({ encryptionScheme: "pkcs1" }); //指定加密格式
+
+//2.生成 公钥私钥，使用 pkcs8标准，pem格式
+var publicPem = key.exportKey("pkcs8-public-pem"); //制定输出格式
+var privatePem = key.exportKey("pkcs8-private-pem");
+var pubKey =  `-----BEGIN PUBLIC KEY-----
+MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAI4Sd1JVtIIrHDoMcknO6iva2+iAMPFo
+Jx+dGrjlgvcYdyePwPJft1ZB4WkZb/vRHN8UKn123CV5B2XolmqrDv0CAwEAAQ==
+-----END PUBLIC KEY-----`
+const priKey =
+"-----BEGIN PRIVATE KEY-----\n" +
+"MIIBVAIBADANBgkqhkiG9w0BAQEFAASCAT4wggE6AgEAAkEAjhJ3UlW0giscOgxy\n" +
+"Sc7qK9rb6IAw8WgnH50auOWC9xh3J4/A8l+3VkHhaRlv+9Ec3xQqfXbcJXkHZeiW\n" +
+"aqsO/QIDAQABAkBwCF/PrYYKn7RCkk4Npf1DV/LSBUSTGW7An0LTSylbb+HKp73X\n" +
+"QUeALkJ3ranLe3UBiAGXZq4IywuDVSu9I4yBAiEAzoY9O1TRcQt8QdG6wNjB5VQM\n" +
+"zmkTtMzicBEu2JtCu7cCIQCwG31HUw7+emB6eDiiLDor/IoeQxujEZu4tMgXcDky\n" +
+"6wIhAMuT8+P6dgJzCedvsCHNCUTgF0eYuL4ugL9rkLwgQCX9AiAwLYULYyyh78a/\n" +
+"Gm6b5y+O4wrCFqfT57hLQqHOz7PGOwIgPN0W26+BrhXIaazkCEf0/qz95cwHEdgl\n" +
+"Sc6Jev4DrBw=\n" +
+"-----END PRIVATE KEY-----";
+server.on("connection", socket => {
+  socket.send(pubKey);
+});
+
+router.ws('/pubKey',(ws,req )=> {
+  ws.send(pubKey)
+})
 
 router.get("/users", (req, res) => {
   const sql = `select * from user`;
@@ -47,17 +79,7 @@ router.put("/users", async (req, res) => {
     if (data.length) {
       res.send("用户名已被占用-修改失败");
     } else {
-      const priKey =
-        "-----BEGIN PRIVATE KEY-----\n" +
-        "MIIBVAIBADANBgkqhkiG9w0BAQEFAASCAT4wggE6AgEAAkEAjhJ3UlW0giscOgxy\n" +
-        "Sc7qK9rb6IAw8WgnH50auOWC9xh3J4/A8l+3VkHhaRlv+9Ec3xQqfXbcJXkHZeiW\n" +
-        "aqsO/QIDAQABAkBwCF/PrYYKn7RCkk4Npf1DV/LSBUSTGW7An0LTSylbb+HKp73X\n" +
-        "QUeALkJ3ranLe3UBiAGXZq4IywuDVSu9I4yBAiEAzoY9O1TRcQt8QdG6wNjB5VQM\n" +
-        "zmkTtMzicBEu2JtCu7cCIQCwG31HUw7+emB6eDiiLDor/IoeQxujEZu4tMgXcDky\n" +
-        "6wIhAMuT8+P6dgJzCedvsCHNCUTgF0eYuL4ugL9rkLwgQCX9AiAwLYULYyyh78a/\n" +
-        "Gm6b5y+O4wrCFqfT57hLQqHOz7PGOwIgPN0W26+BrhXIaazkCEf0/qz95cwHEdgl\n" +
-        "Sc6Jev4DrBw=\n" +
-        "-----END PRIVATE KEY-----";
+
       const { password } = RsaAes(priKey, encryptedAesKey, encryptedData, iv);
       const sql =
         "update user set `username`=?  , `password`=?  ,  `region`=?  , `roleId`=? where `id`=?";
@@ -77,17 +99,6 @@ router.put("/users", async (req, res) => {
 router.post("/users", (req, res) => {
   // const { username, password } = req.body;
   const { username, encryptedAesKey, encryptedData, iv } = req.body;
-  const priKey =
-    "-----BEGIN PRIVATE KEY-----\n" +
-    "MIIBVAIBADANBgkqhkiG9w0BAQEFAASCAT4wggE6AgEAAkEAjhJ3UlW0giscOgxy\n" +
-    "Sc7qK9rb6IAw8WgnH50auOWC9xh3J4/A8l+3VkHhaRlv+9Ec3xQqfXbcJXkHZeiW\n" +
-    "aqsO/QIDAQABAkBwCF/PrYYKn7RCkk4Npf1DV/LSBUSTGW7An0LTSylbb+HKp73X\n" +
-    "QUeALkJ3ranLe3UBiAGXZq4IywuDVSu9I4yBAiEAzoY9O1TRcQt8QdG6wNjB5VQM\n" +
-    "zmkTtMzicBEu2JtCu7cCIQCwG31HUw7+emB6eDiiLDor/IoeQxujEZu4tMgXcDky\n" +
-    "6wIhAMuT8+P6dgJzCedvsCHNCUTgF0eYuL4ugL9rkLwgQCX9AiAwLYULYyyh78a/\n" +
-    "Gm6b5y+O4wrCFqfT57hLQqHOz7PGOwIgPN0W26+BrhXIaazkCEf0/qz95cwHEdgl\n" +
-    "Sc6Jev4DrBw=\n" +
-    "-----END PRIVATE KEY-----";
   const { password } = RsaAes(priKey, encryptedAesKey, encryptedData, iv);
   const sql = "select * from user where `username`=?";
   const arr = [username];
