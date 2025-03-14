@@ -6,7 +6,7 @@ import "./Detail.css";
 import joe from "joe-tools";
 import withRoute from "../../components/sandbox/withRoute";
 import { HeartTwoTone } from "@ant-design/icons";
-
+import DOMPurify from "dompurify";
 function Detail(props) {
   const [newInfo, setNewInfo] = useState(null);
   useEffect(
@@ -37,6 +37,7 @@ function Detail(props) {
       star: newInfo.star + 1
     });
   };
+  const sanitizedHTML = newInfo?.content ?  DOMPurify.sanitize(newInfo.content) : '';
   return (
     <div
       style={{ width: "95%", margin: "0 auto", marginTop: 20, minWidth: 750 }}
@@ -83,7 +84,7 @@ function Detail(props) {
           </ul>
           <div
             className="content"
-            dangerouslySetInnerHTML={{ __html: newInfo.content }}
+            dangerouslySetInnerHTML={{ __html: sanitizedHTML }}
           />
         </div>}
     </div>

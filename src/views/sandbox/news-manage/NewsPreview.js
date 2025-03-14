@@ -6,6 +6,7 @@ import "./NewsPreview.css";
 import joe from "joe-tools";
 import withRoute from "../../../components/sandbox/withRoute";
 import { HeartTwoTone } from "@ant-design/icons";
+import DOMPurify from "dompurify";
 
 function NewsPreview(props) {
   const [newInfo, setNewInfo] = useState(null);
@@ -39,6 +40,7 @@ function NewsPreview(props) {
       star: newInfo.star + 1
     });
   };
+  const sanitizedHTML = newInfo?.content ?  DOMPurify.sanitize(newInfo.content) : '';
   return (
     <div style={{ minWidth: 750 }}>
       {newInfo &&
@@ -90,8 +92,10 @@ function NewsPreview(props) {
           </ul>
           <div
             className="content"
-            dangerouslySetInnerHTML={{ __html: newInfo.content }}
+            dangerouslySetInnerHTML={{ __html: sanitizedHTML }}
           />
+
+
         </div>}
     </div>
   );
