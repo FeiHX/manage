@@ -37,7 +37,7 @@ const priKey =
 "Sc6Jev4DrBw=\n" +
 "-----END PRIVATE KEY-----";
 
-router.ws('/pubKey',(ws,req )=> {
+router.ws('/websocket/pubKey',(ws,req )=> {
   console.log('router.ws(/pubKey')
   ws.send(pubKey)
 })

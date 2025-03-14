@@ -1,19 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Form, Button, Input, notification } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import "./login.css";
 import withRoute from "../../components/sandbox/withRoute.js";
 import { connect } from "react-redux";
 import md5 from "js-md5";
-import { RasAes } from '../../utils/crypto';
+import { RasAes } from "../../utils/crypto";
 
 function LoginForm(props) {
-  const ws2 = new WebSocket(`wss://my-manage.cn/websocket/pubKey`);
-  ws2.onmessage = function(msg) {
-    console.log('msg:',msg.data)
-    localStorage.setItem('pubKey',msg.data)
-    ws2.close()
-  } 
+  useEffect(() => {
+    const ws2 = new WebSocket(`wss://my-manage.cn/websocket/pubKey`);
+    ws2.onmessage = function(msg) {
+      console.log("msg:", msg.data);
+      localStorage.setItem("pubKey", msg.data);
+      ws2.close();
+    };
+  });
+
   const onFinish = value => {
     let newValue = {
       username: value.username,
@@ -28,25 +31,34 @@ function LoginForm(props) {
       list.reverse();
       props.changeNoticeList(list, ws);
     };
-    var pubKey =  `-----BEGIN PUBLIC KEY-----
+    var pubKey = `-----BEGIN PUBLIC KEY-----
     MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAI4Sd1JVtIIrHDoMcknO6iva2+iAMPFo
     Jx+dGrjlgvcYdyePwPJft1ZB4WkZb/vRHN8UKn123CV5B2XolmqrDv0CAwEAAQ==
-    -----END PUBLIC KEY-----`
-    const { encryptedAesKey, iv, ciphertext } = RasAes({'password':value.password},pubKey)
-
-    props.loginActions(value.username, props.description,{encryptedAesKey,iv,encryptedData: ciphertext}).then(
-      r => {
-        props.history.push("/home");
-      },
-      err => {
-        notification.info({
-          message: `通知`,
-          description: `${err.response.data}`,
-          placement: "top",
-          duration: "1"
-        });
-      }
+    -----END PUBLIC KEY-----`;
+    const { encryptedAesKey, iv, ciphertext } = RasAes(
+      { password: value.password },
+      pubKey
     );
+
+    props
+      .loginActions(value.username, props.description, {
+        encryptedAesKey,
+        iv,
+        encryptedData: ciphertext
+      })
+      .then(
+        r => {
+          props.history.push("/home");
+        },
+        err => {
+          notification.info({
+            message: `通知`,
+            description: `${err.response.data}`,
+            placement: "top",
+            duration: "1"
+          });
+        }
+      );
     props.getUserList && props.getUserList();
     props.getCategories();
     props.getrolelist && props.getrolelist();
