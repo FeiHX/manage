@@ -204,11 +204,8 @@ function UserList(props) {
       //重置表单
       addForm.current.resetFields();
       //post到后端，自动生成id，再设置datasource，方便后面的删除和更新
-      var pubKey =  `-----BEGIN PUBLIC KEY-----
-      MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAI4Sd1JVtIIrHDoMcknO6iva2+iAMPFo
-      Jx+dGrjlgvcYdyePwPJft1ZB4WkZb/vRHN8UKn123CV5B2XolmqrDv0CAwEAAQ==
-      -----END PUBLIC KEY-----`
-      const { encryptedAesKey, iv, ciphertext } = RasAes({'password':value.password},pubKey)
+
+      const { encryptedAesKey, iv, ciphertext } = RasAes({'password':value.password},localStorage.getItem("pubKey"))
 
       Axios.post(`/api/users/adduser`, {
         ...value,
@@ -243,11 +240,7 @@ function UserList(props) {
   };
   const updateFormOk = item => {
     updateForm.current.validateFields().then(value => {
-      var pubKey =  `-----BEGIN PUBLIC KEY-----
-      MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAI4Sd1JVtIIrHDoMcknO6iva2+iAMPFo
-      Jx+dGrjlgvcYdyePwPJft1ZB4WkZb/vRHN8UKn123CV5B2XolmqrDv0CAwEAAQ==
-      -----END PUBLIC KEY-----`
-      const { encryptedAesKey, iv, ciphertext } = RasAes({'password':value.password},pubKey)
+      const { encryptedAesKey, iv, ciphertext } = RasAes({'password':value.password},localStorage.getItem("pubKey"))
       setisUpdateOpen(false);
       Axios.put(`/api/users?id=${current}`, {
         ...value,

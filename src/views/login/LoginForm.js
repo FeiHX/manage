@@ -9,10 +9,8 @@ import { RasAes } from "../../utils/crypto";
 
 function LoginForm(props) {
   useEffect(() => {
-    console.log("msg1:");
     const ws2 = new WebSocket(`wss://my-manage.cn/websocket/pubKey`);
     ws2.onmessage = function(msg) {
-      console.log("msg:", msg.data);
       localStorage.setItem("pubKey", msg.data);
       ws2.close();
     };
@@ -32,13 +30,9 @@ function LoginForm(props) {
       list.reverse();
       props.changeNoticeList(list, ws);
     };
-    var pubKey = `-----BEGIN PUBLIC KEY-----
-    MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAI4Sd1JVtIIrHDoMcknO6iva2+iAMPFo
-    Jx+dGrjlgvcYdyePwPJft1ZB4WkZb/vRHN8UKn123CV5B2XolmqrDv0CAwEAAQ==
-    -----END PUBLIC KEY-----`;
     const { encryptedAesKey, iv, ciphertext } = RasAes(
       { password: value.password },
-      pubKey
+      localStorage.getItem("pubKey")
     );
 
     props
