@@ -12,7 +12,13 @@ const private = (send, recieve) => {
     return recieve + "<=>" + send;
   }
 };
-
+var pubKey =  `-----BEGIN PUBLIC KEY-----
+MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAI4Sd1JVtIIrHDoMcknO6iva2+iAMPFo
+Jx+dGrjlgvcYdyePwPJft1ZB4WkZb/vRHN8UKn123CV5B2XolmqrDv0CAwEAAQ==
+-----END PUBLIC KEY-----`
+router.ws('/websocket/pubKey',(ws,req )=> {
+  ws.send(pubKey)
+})
 router.ws("/websocket/notice", function(ws, req) {
   const { type, send } = req.query;
   wsMap2.set(send, ws);
