@@ -219,7 +219,7 @@ export default function NewsEditor(props) {
         }}
         // 输入处理
         handleBeforeInput={(char, editorState) => {
-          const allowedChars = /[\p{Unified_Ideograph}\d\w,\.\?!@#\$%^&*()\-+=]/u;
+          const allowedChars = /[\p{Unified_Ideograph}\d\w,\.\?!@#\$%^&*()\-+=\s]/u;
           return allowedChars.test(char) ? "not-handled" : "handled";
         }}
       />
