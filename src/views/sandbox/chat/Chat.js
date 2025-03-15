@@ -6,6 +6,7 @@ import "./chat.css";
 import { parse, stringify } from 'flatted';
 import styled from 'styled-components';
 import NewsEditor from "../../../components/news-manage/NewsEditor";
+import DOMPurify from "dompurify";
 const MyNewsEditor = styled(NewsEditor)``;
 
 const { Header, Content, Sider } = Layout;
@@ -171,7 +172,7 @@ const Chat = props => {
                         ? 'selfMessageContent'
                         : 'messageContent'
                       } 
-                      dangerouslySetInnerHTML={{ __html: message.message }}>
+                      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(message.message) }}>
                     </div>
                     <div className="messageTime">
                       {message.key}--{message.send}

@@ -40,7 +40,6 @@ function NewsPreview(props) {
       star: newInfo.star + 1
     });
   };
-  const sanitizedHTML = newInfo?.content ?  DOMPurify.sanitize(newInfo.content) : '';
   return (
     <div style={{ minWidth: 750 }}>
       {newInfo &&
@@ -92,7 +91,7 @@ function NewsPreview(props) {
           </ul>
           <div
             className="content"
-            dangerouslySetInnerHTML={{ __html: sanitizedHTML }}
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(newInfo.content) }}
           />
 
 
