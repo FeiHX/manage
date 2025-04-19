@@ -60,7 +60,7 @@ function NewsAdd(props) {
     }).then(res => {
       if(auditState) {
         const ws = new WebSocket(
-          `wss://mymanage.xyz/websocket/notice?type=submit&&user=${props.username}`
+          `wss://my-manage.cn/websocket/notice?type=submit&&user=${props.username}`
         );
         ws.onopen = function() {
           ws.send(

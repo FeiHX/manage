@@ -103,7 +103,7 @@ function Audit(props) {
     }).then(res => {
       if (auditState == 2 && publishState == 1) {
         const ws = new WebSocket(
-          `wss://mymanage.xyz/websocket/notice?type=pass&&user=${props.username}`
+          `wss://my-manage.cn/websocket/notice?type=pass&&user=${props.username}`
         );
         ws.onopen = function() {
           ws.send(
@@ -118,7 +118,7 @@ function Audit(props) {
         };
       } else if (auditState == 3 && publishState == 0) {
         const ws = new WebSocket(
-          `wss://mymanage.xyz/websocket/notice?type=reject&&user=${props.username}`
+          `wss://my-manage.cn/websocket/notice?type=reject&&user=${props.username}`
         );
         ws.onopen = function() {
           ws.send(
