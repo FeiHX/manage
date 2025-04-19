@@ -66,7 +66,7 @@ function NewsUpdate(props) {
     }).then(res => {
       if(auditState) {
         const ws = new WebSocket(
-            "wss://my-manage.cn/websocket/notice?type=submit"
+            "wss://mymanage.xyz/websocket/notice?type=submit"
           );
           ws.onopen = function() {
             ws.send(

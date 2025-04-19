@@ -9,19 +9,18 @@ import { RasAes } from "../../utils/crypto";
 
 function LoginForm(props) {
   useEffect(() => {
-    const ws2 = new WebSocket(`wss://my-manage.cn/websocket/pubKey`);
+    const ws2 = new WebSocket(`wss://mymanage.xyz/websocket/pubKey`);
     ws2.onmessage = function(msg) {
       localStorage.setItem("pubKey", msg.data);
       ws2.close();
     };
   });
-
   const onFinish = value => {
     let newValue = {
       username: value.username,
       password: md5(value.password)
     };
-    const ws1 = new WebSocket(`wss://my-manage.cn/websocket/notice?type=list`);
+    const ws1 = new WebSocket(`wss://mymanage.xyz/websocket/notice?type=list`);
     ws1.onmessage = function(msg) {
       let list = JSON.parse(msg.data).map(item => {
         item.message = JSON.parse(item.message);
@@ -58,7 +57,7 @@ function LoginForm(props) {
     props.getCategories();
     props.getrolelist && props.getrolelist();
     props.getrightlist();
-    const ws = new WebSocket(`wss://my-manage.cn/websocket/notice?type=list`);
+    const ws = new WebSocket(`wss://mymanage.xyz/websocket/notice?type=list`);
     ws.onmessage = function(msg) {
       let list = JSON.parse(msg.data).map(item => {
         item.message = JSON.parse(item.message);

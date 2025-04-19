@@ -1,20 +1,5 @@
 'use strict';
 
-// module.exports = {
-//   process() {
-//     return 'module.exports = {};';
-//   },
-//   getCacheKey() {
-//     // The output is always the same.
-//     return 'cssTransform';
-//   }
-// };
-// module.exports = {
-//     process() {
-//     return 'module.exports = {};';
-//   },
-// };
-
 module.exports = {
   process() {
     // 返回一个包含 `code` 属性的对象

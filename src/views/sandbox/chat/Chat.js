@@ -38,14 +38,14 @@ const Chat = props => {
   );
   useEffect(() => {
     const ws2 = new WebSocket(
-      `wss://my-manage.cn/websocket/chat?type=userlist&&send=${props.username}`
+      `wss://mymanage.xyz/websocket/chat?type=userlist&&send=${props.username}`
     );
     ws2.onmessage = function(msg) {
       setuserList(JSON.parse(msg.data));
       ws2.close();
     };
     const ws = new WebSocket(
-      `wss://my-manage.cn/websocket/chat?type=chat&&send=${props.username}&&recieve=${recieve}`
+      `wss://mymanage.xyz/websocket/chat?type=chat&&send=${props.username}&&recieve=${recieve}`
     );
     ws.onmessage = function(msg) {
       if (msg.data.indexOf("type") == -1) {
@@ -65,7 +65,7 @@ const Chat = props => {
           onClick={() => {
             setrecieve(item.username);
             const ws = new WebSocket(
-              `wss://my-manage.cn/websocket/chat?type=messagelist&&send=${props.username}&&recieve=${item.username}`
+              `wss://mymanage.xyz/websocket/chat?type=messagelist&&send=${props.username}&&recieve=${item.username}`
             );
             ws.onmessage = function(msg) {
               if (msg.data.indexOf("type") == -1) {
@@ -101,7 +101,7 @@ const Chat = props => {
         }
       ]);
       const ws = new WebSocket(
-        `wss://my-manage.cn/websocket/chat?type=chat&&send=${props.username}&&recieve=${recieve}`
+        `wss://mymanage.xyz/websocket/chat?type=chat&&send=${props.username}&&recieve=${recieve}`
       );
       ws.onopen = function() {
         ws.send(

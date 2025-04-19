@@ -21,7 +21,7 @@ function usePublish(type, username) {
       publishTime: Date.now() + ""
     }).then(res => {
       const ws = new WebSocket(
-        `wss://my-manage.cn/websocket/notice?type=publish&&send=${username}`
+        `wss://mymanage.xyz/websocket/notice?type=publish&&send=${username}`
       );
       ws.onopen = function() {
         ws.send(
@@ -49,7 +49,7 @@ function usePublish(type, username) {
       publishState: 3
     }).then(res => {
       const ws = new WebSocket(
-        `wss://my-manage.cn/websocket/notice?type=sunset&&user=${username}`
+        `wss://mymanage.xyz/websocket/notice?type=sunset&&user=${username}`
       );
       ws.onopen = function() {
         ws.send(
@@ -75,7 +75,7 @@ function usePublish(type, username) {
     setdataSource(dataSource.filter(item => item.id !== data.id));
     Axios.delete(`/api/news/update/delete?id=${data.id}`).then(res => {
       const ws = new WebSocket(
-        `wss://my-manage.cn/websocket/notice?type=delete&&user=${username}`
+        `wss://mymanage.xyz/websocket/notice?type=delete&&user=${username}`
       );
       ws.onopen = function() {
         ws.send(

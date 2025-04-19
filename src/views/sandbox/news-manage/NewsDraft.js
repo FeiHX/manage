@@ -97,7 +97,7 @@ function NewsDraft(props) {
       auditState: 1
     }).then(res => {
       const ws = new WebSocket(
-        `wss://my-manage.cn/websocket/notice?type=submit&&user=${props.username}`
+        `wss://mymanage.xyz/websocket/notice?type=submit&&user=${props.username}`
         );
         ws.onopen = function() {
           ws.send(

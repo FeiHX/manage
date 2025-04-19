@@ -60,7 +60,7 @@ function TopHeader(props) {
     () => {
       function createWss() {
         const wss = new WebSocket(
-          `wss://my-manage.cn/websocket/notice?send=${props.username}`
+          `wss://mymanage.xyz/websocket/notice?send=${props.username}`
         );
         // 处理连接打开事件
         wss.onopen = () => {
