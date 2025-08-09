@@ -26,6 +26,9 @@ const authMiddleware = (req, res, next) => {
       return;
     }
     try {
+      const buf = Buffer.from(req.headers.authorization.substring(req.headers.authorization.indexOf(' ')+1), 'base64');
+      const authString = buf.toString('ascii');
+      const jwToken = authString.split(':');
       jwt.verify(jwToken[0], jwtSecret);
     } catch (e) {
       if (e.name === "TokenExpiredError") {
