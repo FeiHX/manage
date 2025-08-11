@@ -20,16 +20,29 @@ Axios.interceptors.response.use(
   res => {
     return res;
   },
-  error => {
-    notification.info({
-      message: `${error.response.data}`,
-      description: `即将重定向至登录页`,
-      placement: "bottomRight",
-      duration: 3
-    });
-    window.location.hash = "/login";
-    localStorage.removeItem("jwToken");
-    localStorage.removeItem("expiresIn");
+  async (error) => {
+    const orignalReq = error.config;
+    if (error.response?.status === 401 && !orignalReq._retry) {
+      orignalReq._retry = true; 
+      try{
+        const {data} = await axios.post('/api/refresh',{expiresIn:localStorage.getItem('expiresIn')})
+        const encoded = Base64.encode(`${data}`);
+        localStorage.setItem('jwToken',data)
+        orignalReq.headers.Authorization ="Bearer " + `${encoded}`
+        return Axios(orignalReq)
+      }catch(e) {
+        notification.info({
+          message: `${error.response.data}`,
+          description: `即将重定向至登录页`,
+          placement: "bottomRight",
+          duration: 3
+        });
+        window.location.hash = "/login";
+        localStorage.removeItem("jwToken");
+        localStorage.removeItem("expiresIn");
+        return Promise.reject(e);
+      }    
+    }
     return Promise.reject(error);
   }
 );
