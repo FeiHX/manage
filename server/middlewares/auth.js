@@ -17,7 +17,8 @@ const authMiddleware = (req, res, next) => {
     (pathname === "/users/otherlogin" && method === "POST") ||
     (pathname === "/rolelist" && method === "GET") ||
     (pathname === "/rightlist" && method === "GET") ||
-    (pathname === "/rightlistchildren" && method === "GET")
+    (pathname === "/rightlistchildren" && method === "GET")||
+    (pathname === "/refresh" && method === "POST")
   ) {
     next();
   } else {
