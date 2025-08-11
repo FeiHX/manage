@@ -93,7 +93,6 @@ router.put("/users", async (req, res) => {
   });
 });
 router.post("/users", (req, res) => {
-  // const { username, password } = req.body;
   const { username, encryptedAesKey, encryptedData, iv } = req.body;
   const { password } = RsaAes(priKey, encryptedAesKey, encryptedData, iv);
   const sql = "select * from user where `username`=?";
@@ -118,15 +117,65 @@ router.post("/users", (req, res) => {
         role: data[0].role
       },
       jwtSecret,
-      { expiresIn }
+      { expiresIn:24 * 60 * 60 }
     );
-    res.send({ token: token, expiresIn: expiresIn });
+    const refreshToken = jwt.sign(
+      {
+        id: data[0].id,
+        username: data[0].username,
+        roleId: data[0].roleId,
+        region: data[0].region,
+        role: data[0].role
+      },
+      'refreshToken',
+      { expiresIn:7 * 24 * 60 * 60 }
+    );
+    const sql = "update user set `refreshToken`=? where `id`=?";
+    const arr = [refreshToken, data[0].id];
+    sqlFn(sql, arr, function() {
+
+    });
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,    
+      secure: true,      
+      sameSite: 'strict', 
+      maxAge: 7 * 24 * 60 * 60 * 1000
+    });
+    res.send({ token: token, expiresIn: 24 * 60 * 60 });
+  });
+});
+router.post("/refresh", (req, res) => {
+  const { refreshToken } = req.cookies;
+  const { expiresIn } = req.body;
+  const sql = "select * from user where `refreshToken`=? ";
+  sqlFn(sql, [refreshToken], function(data) {
+    try{
+      jwt.verify(refreshToken,'refreshToken')
+      const accessToken = jwt.sign(
+        {
+          id: data[0].id,
+          username: data[0].username,
+          roleId: data[0].roleId,
+          region: data[0].region,
+          role: data[0].role
+        },
+        jwtSecret,
+        { expiresIn:expiresIn-0 }
+      );
+      res.send(accessToken)
+    }catch(e) {
+      if(e.name === 'TokenExpiredError'){
+        res.status(401).send("JWT失效");
+        return
+      }   
+    }  
   });
 });
 router.post("/users/otherlogin", async (req, res) => {
-  const { username, password } = req.body;
-  const sql = "select * from user where `username`=? AND `password`=?";
-  const arr = [username, password];
+  const { username, encryptedAesKey, encryptedData, iv } = req.body;
+  const { password } = RsaAes(priKey, encryptedAesKey, encryptedData, iv);
+  const sql = "select * from user where `username`=?";
+  const arr = [username];
   sqlFn(sql, arr, async function(data) {
     data = JSON.parse(JSON.stringify(data));
     if (data.length == 0) {
@@ -149,6 +198,28 @@ router.post("/users/otherlogin", async (req, res) => {
       jwtSecret,
       { expiresIn: 60 }
     );
+    const refreshToken = jwt.sign(
+      {
+        id: data[0].id,
+        username: data[0].username,
+        roleId: data[0].roleId,
+        region: data[0].region,
+        role: data[0].role
+      },
+      'refreshToken',
+      { expiresIn: 10 * 60 }
+    );
+    const sql = "update user set `refreshToken`=? where `id`=?";
+    const arr = [refreshToken, data[0].id];
+    sqlFn(sql, arr, function() {
+
+    });
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,    
+      secure: true,      
+      sameSite: 'strict', 
+      maxAge: 7 * 24 * 60 * 60 * 1000
+    });
     res.send({ token: token, expiresIn: 60 });
   });
 });
