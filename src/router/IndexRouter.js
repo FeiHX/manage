@@ -117,7 +117,7 @@ function Indexrouter(props) {
               "/api/users/otherlogin",
               "/login",
               "返回登录",
-              "此页面登录JWT失效时间为60秒"
+              "此页面登录JWT失效时间为600秒"
             ]}
           />
         }
