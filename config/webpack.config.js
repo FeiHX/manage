@@ -5,7 +5,7 @@ const CssMinimizerWebpackPlugin = require("css-minimizer-webpack-plugin");
 const TerserWebpackPlugin = require("terser-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
-
+const CompressionPlugin = require('compression-webpack-plugin');
 const isProduction = process.env.NODE_ENV === "production";
 //返回处理样式loader的函数
 const getStyleLoaders = pre => {
@@ -82,6 +82,14 @@ module.exports = {
       //以template为模板创建新html文件
       template: path.resolve(__dirname, "../public/index.html")
     }),
+    new CompressionPlugin({ 
+      filename: "[path][base].gz", 
+      algorithm: 'gzip', 
+      test: /\.js$|\.css$|\.html$|\.ttf$|\.eot$|\.woff$/, 
+      threshold: 10240, 
+      minRatio: 0.73, 
+      deleteOriginalAssets: false
+  }),
     isProduction &&
       new CopyPlugin({
         //复制图标文件
