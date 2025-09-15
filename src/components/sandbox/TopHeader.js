@@ -115,7 +115,7 @@ function TopHeader(props) {
         props.cleanCurrentUser();
         localStorage.removeItem("jwToken");
         localStorage.removeItem("expiresIn");
-        window.location.hash = "/login";
+        props.history.push("/login");
       }
     }
   ];
