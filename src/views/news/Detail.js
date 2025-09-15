@@ -47,7 +47,7 @@ function Detail(props) {
             <Button
               style={{ border: "none" }}
               icon={<ArrowLeftOutlined style={{ width: 60, height: 60 }} />}
-              onClick={() => window.history.back()}
+              onClick={() => props.history.push(-1)}
             />
             {newInfo.title}
             <span className="subhead">
