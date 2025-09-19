@@ -19,6 +19,7 @@ const getStyleLoaders = pre => {
 module.exports = {
   entry: "./src/index.js", //入口,指定一个入口文件，作为webpack的打包入口，从这个文件卡萨构建整个项目
   output: {
+    publicPath: '/',
     //输出文件的文件名
     path: isProduction ? path.resolve(__dirname, "../dist") : undefined, //输出目录
     filename: isProduction
